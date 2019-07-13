@@ -1,50 +1,43 @@
 {
   "project_info": {
-    "project_number": "221769230897",
-    "firebase_url": "https://garderobelappen.firebaseio.com",
-    "project_id": "garderobelappen",
-    "storage_bucket": "garderobelappen.appspot.com"
+    "project_number": "192165030024",
+    "firebase_url": "https://garderobel.firebaseio.com",
+    "project_id": "garderobel",
+    "storage_bucket": "garderobel.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:221769230897:android:1917255a25c16393",
+        "mobilesdk_app_id": "1:192165030024:android:1917255a25c16393",
         "android_client_info": {
           "package_name": "app.garderobel.garderobeladmin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "221769230897-7nopaugs35vg2o0o5dvijgrs3ve2l0h1.apps.googleusercontent.com",
+          "client_id": "192165030024-nt1jvofltjiqj0lrseptej0g8aao9foo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "app.garderobel.garderobeladmin",
-            "certificate_hash": "2bf06790d651235b8fdbe315fe1915c8c1feffad"
+            "certificate_hash": "32f39bac552b2eefdaf61d9c76505a643c859873"
           }
         },
         {
-          "client_id": "221769230897-dd4ql3tcfgcbk95odcgue4hufmq8d0br.apps.googleusercontent.com",
+          "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCoiT6_zUcUCoi3r9swH6R_0GkHhCr_S0w"
+          "current_key": "AIzaSyDDsmlerkWMqUWo00HgzhNp-UCDdZm63_Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "221769230897-dd4ql3tcfgcbk95odcgue4hufmq8d0br.apps.googleusercontent.com",
+              "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "221769230897-cquh1kbqqin10eguksa9jf1t832f9dft.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "app.garderobelappen.admin"
-              }
             }
           ]
         }
@@ -52,79 +45,36 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:221769230897:android:4072e5116f06fa30",
+        "mobilesdk_app_id": "1:192165030024:android:4072e5116f06fa30",
         "android_client_info": {
           "package_name": "app.garderobel.garderobelappen"
         }
       },
       "oauth_client": [
         {
-          "client_id": "221769230897-dd4ql3tcfgcbk95odcgue4hufmq8d0br.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCoiT6_zUcUCoi3r9swH6R_0GkHhCr_S0w"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "221769230897-dd4ql3tcfgcbk95odcgue4hufmq8d0br.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "221769230897-cquh1kbqqin10eguksa9jf1t832f9dft.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "app.garderobelappen.admin"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:221769230897:android:16790c506fd37b26",
-        "android_client_info": {
-          "package_name": "app.garderobl.garderoblapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "221769230897-o6k6dhpn45ivtof3bdfdphdl84os0mi5.apps.googleusercontent.com",
+          "client_id": "192165030024-7jscec52ks4kdpr325epc9auohopnivi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "app.garderobl.garderoblapp",
+            "package_name": "app.garderobel.garderobelappen",
             "certificate_hash": "2bf06790d651235b8fdbe315fe1915c8c1feffad"
           }
         },
         {
-          "client_id": "221769230897-dd4ql3tcfgcbk95odcgue4hufmq8d0br.apps.googleusercontent.com",
+          "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCoiT6_zUcUCoi3r9swH6R_0GkHhCr_S0w"
+          "current_key": "AIzaSyDDsmlerkWMqUWo00HgzhNp-UCDdZm63_Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "221769230897-dd4ql3tcfgcbk95odcgue4hufmq8d0br.apps.googleusercontent.com",
+              "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "221769230897-cquh1kbqqin10eguksa9jf1t832f9dft.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "app.garderobelappen.admin"
-              }
             }
           ]
         }
