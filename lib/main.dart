@@ -23,7 +23,7 @@ class Garderobelappen extends StatelessWidget {
   Widget build(BuildContext context) {
     var materialApp = MaterialApp(
       title: _title,
-      theme: ThemeData(primarySwatch: Colors.red),
+      theme: ThemeData(primarySwatch: Colors.blueGrey),
       home: Authenticator(),
 //      initialRoute: Authenticator.routeName,
     );

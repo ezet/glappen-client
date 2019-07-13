@@ -105,10 +105,10 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(item.iconData, color: color, size: widget.iconSize),
-                Text(
-                  item.text,
-                  style: TextStyle(color: color),
-                )
+//                Text(
+//                  item.text,
+//                  style: TextStyle(color: color),
+//                )
               ],
             ),
           ),

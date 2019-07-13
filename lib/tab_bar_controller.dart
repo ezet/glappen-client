@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/garderobel_api.dart';
-import 'package:garderobelappen/bottom_bar.dart';
 import 'package:garderobelappen/dashboard.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -42,10 +41,16 @@ class _TabBarControllerState extends State<TabBarController> {
 //      bottomNavigationBar: _buildBottomNavigationBar(),
       bottomNavigationBar: _buildBottomAppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("Check-in"),
+      floatingActionButton: FloatingActionButton(
+//        label: Text("Check-in"),
 //        icon: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          size: 40,
+        ),
         elevation: 5,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.orange,
         onPressed: () async {
           final result = await Navigator.push<String>(
               context, MaterialPageRoute(builder: (context) => Scanner()));
@@ -61,15 +66,39 @@ class _TabBarControllerState extends State<TabBarController> {
     );
   }
 
+//  Widget _buildBottomAppBar() {
+//    return FABBottomAppBar(
+//      notchedShape:
+//          AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+//      items: [
+//        FABBottomAppBarItem(iconData: Icons.menu, text: ""),
+//        FABBottomAppBarItem(iconData: Icons.search, text: "")
+//      ],
+//    );
+//  }
+
   Widget _buildBottomAppBar() {
-    return FABBottomAppBar(
-      notchedShape:
-          AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
-      items: [
-        FABBottomAppBarItem(iconData: Icons.event_note, text: "Tickets"),
-        FABBottomAppBarItem(iconData: Icons.person, text: "Profile")
-      ],
-    );
+    return BottomAppBar(
+        shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+        elevation: 10,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                    child: Icon(
+                  Icons.menu,
+                  color: Colors.black87,
+                )),
+                SizedBox(
+                    child: Icon(
+                  Icons.more_vert,
+                  color: Colors.black87,
+                ))
+              ]),
+        ));
   }
 
   BottomNavigationBar _buildBottomNavigationBar() {
