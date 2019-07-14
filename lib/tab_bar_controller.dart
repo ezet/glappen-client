@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/garderobel_api.dart';
-import 'package:garderobelappen/dashboard.dart';
+import 'package:garderobelappen/receipts.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -23,9 +23,9 @@ class _TabBarControllerState extends State<TabBarController> {
   int _selectedIndex = 0;
 
   static const List<Widget> _tabs = <Widget>[
-    Dashboard(),
-    Dashboard(),
-    Dashboard(),
+    Receipts(),
+    Receipts(),
+    Receipts(),
   ];
 
   void _onItemTapped(int index) {
@@ -37,7 +37,7 @@ class _TabBarControllerState extends State<TabBarController> {
     return Scaffold(
       key: this.scaffoldKey,
 //      appBar: _buildAppBar(),
-      body: Dashboard(),
+      body: Receipts(),
 //      bottomNavigationBar: _buildBottomNavigationBar(),
       bottomNavigationBar: _buildBottomAppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -66,91 +66,55 @@ class _TabBarControllerState extends State<TabBarController> {
     );
   }
 
-//  Widget _buildBottomAppBar() {
-//    return FABBottomAppBar(
-//      notchedShape:
-//          AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
-//      items: [
-//        FABBottomAppBarItem(iconData: Icons.menu, text: ""),
-//        FABBottomAppBarItem(iconData: Icons.search, text: "")
-//      ],
-//    );
-//  }
+  _showProfileSheet() {
+    _buildBottomSheet(Container());
+  }
+
+  _buildBottomSheet(Widget child) {
+    var radius = Radius.circular(10);
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: radius, topRight: radius)),
+        builder: (ctx) {
+          return Container();
+        });
+  }
+
+  _showFilterSheet() {
+    _buildBottomSheet(Container());
+  }
 
   Widget _buildBottomAppBar() {
     return BottomAppBar(
         shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         elevation: 10,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: 4),
           child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                    child: Icon(
-                  Icons.menu,
-                  color: Colors.black87,
-                )),
+                    height: 48,
+                    width: 48,
+                    child: Material(
+                        child: InkWell(
+                            onTap: () {
+                              _showProfileSheet();
+                            },
+                            child: Icon(Icons.menu, color: Colors.black87)))),
                 SizedBox(
-                    child: Icon(
-                  Icons.more_vert,
-                  color: Colors.black87,
-                ))
+                    height: 48,
+                    width: 48,
+                    child: Material(
+                        child: InkWell(
+                            onTap: () {
+                              _showFilterSheet();
+                            },
+                            child: Icon(Icons.more_vert, color: Colors.black87))))
               ]),
         ));
-  }
-
-  BottomNavigationBar _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-//      showUnselectedLabels: false,
-
-//      unselectedItemColor: Theme.of(context).buttonColor,
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people),
-//          activeIcon: Icon(
-//            Icons.home,
-//          ),
-          title: Text(
-            'Queue',
-          ),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.history),
-          title: Text(
-            'History',
-          ),
-        ),
-//        BottomNavigationBarItem(
-//          backgroundColor: Theme.of(context).primaryColor,
-//          icon: Icon(Icons.person),
-//          title: Text(
-//            "Profile",
-//          ),
-//        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.settings,
-//            color: Colors.amber,
-          ),
-          title: Text('Settings'),
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-//      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
-      elevation: 0,
-      title: Text(
-        "Garderobelappen",
-        style: TextStyle(color: Colors.white, fontSize: 22),
-      ),
-    );
   }
 
   _handleScanResult(String qrCode) async {

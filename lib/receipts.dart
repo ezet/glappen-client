@@ -5,19 +5,19 @@ import 'package:garderobel_api/garderobel_api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({Key key}) : super(key: key);
+class Receipts extends StatelessWidget {
+  const Receipts({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final GarderobelApi api = Provider.of<GetIt>(context).get<GarderobelApi>();
     final user = Provider.of<FirebaseUser>(context);
     final reservations = api.findReservationsForUser(user.uid);
-    return StreamProvider.value(value: reservations, child: ReservationList());
+    return StreamProvider.value(value: reservations, child: ReceiptsList());
   }
 }
 
-class ReservationList extends StatelessWidget {
+class ReceiptsList extends StatelessWidget {
   GarderobelApi api;
   FirebaseUser user;
 
