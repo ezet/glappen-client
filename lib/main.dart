@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'locator.dart';
-import 'tab_bar_controller.dart';
+import 'dashboard.dart';
 
 void main() {
   runApp(
@@ -74,7 +74,7 @@ class _AuthenticatorState extends State<Authenticator> {
 //          photoUrl: _currentUser.photoUrl);
 //      api.updateUser(user);
 
-      return TabBarController();
+      return Dashboard();
     }
   }
 
