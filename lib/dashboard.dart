@@ -112,7 +112,43 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _showFilterSheet() {
-    _buildBottomSheet(Container());
+    _buildBottomSheet(Container(
+      height: 400,
+      child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Filter"),
+              RadioListTile(
+                title: Text("Active only"),
+                value: 1,
+                groupValue: 1,
+                onChanged: (int) => {},
+              ),
+              RadioListTile(
+                title: Text("All"),
+                value: 2,
+                groupValue: 1,
+                onChanged: (int) => {},
+              ),
+              Divider(),
+              Text("Sort by"),
+              RadioListTile(
+                title: Text("Date"),
+                value: 1,
+                groupValue: 1,
+                onChanged: (int) => {},
+              ),
+              RadioListTile(
+                title: Text("Venue"),
+                value: 2,
+                groupValue: 1,
+                onChanged: (int) => {},
+              ),
+            ],
+          )),
+    ));
   }
 
   Widget _buildBottomAppBar() {
