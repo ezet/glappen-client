@@ -28,15 +28,17 @@ class ReceiptsList extends StatelessWidget {
     // TODO: implement build
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
     return ListView.builder(
-      itemBuilder: (context, i) => _buildListItem(list[i]),
+      itemBuilder: (context, i) => _buildListItem(context, list[i]),
       itemCount: list?.length ?? 0,
     );
   }
 
-  Widget _buildListItem(Reservation item) {
+  Widget _buildListItem(BuildContext context, Reservation item) {
     return Card(
       child: ListTile(
-//        onTap: () => api.checkOut(user.uid, item.ref),
+        onTap: () async {
+          await api.checkOut(item.ref);
+        },
         title: Text(item?.venueName ?? ''),
         leading: Icon(Icons.event_note),
         subtitle: Text(item.state.toString()),

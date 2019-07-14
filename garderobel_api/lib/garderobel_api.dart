@@ -10,7 +10,7 @@ abstract class GarderobelApi {
 
   Stream<Iterable<Reservation>> findReservationsForUser(String userId, {bool onlyActive: true});
 
-  Future checkOut(String uid);
+  Future checkOut(DocumentReference reservation);
 }
 
 class LocalGarderobelApi implements GarderobelApi {
@@ -88,9 +88,11 @@ class LocalGarderobelApi implements GarderobelApi {
   }
 
   @override
-  Future checkOut(String uid) {
-    // TODO: implement checkOut
-    return null;
+  Future checkOut(DocumentReference reservation) {
+    return reservation.updateData({
+      ReservationRef.jsonState: ReservationState.CHECKING_OUT.index,
+      ReservationRef.jsonStateUpdated: FieldValue.serverTimestamp()
+    });
   }
 }
 
