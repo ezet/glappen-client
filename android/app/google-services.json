@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "192165030024",
+    "firebase_url": "https://garderobel.firebaseio.com",
+    "project_id": "garderobel",
+    "storage_bucket": "garderobel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192165030024:android:1917255a25c16393",
+        "android_client_info": {
+          "package_name": "app.garderobel.garderobeladmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192165030024-nt1jvofltjiqj0lrseptej0g8aao9foo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.garderobel.garderobeladmin",
+            "certificate_hash": "32f39bac552b2eefdaf61d9c76505a643c859873"
+          }
+        },
+        {
+          "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDsmlerkWMqUWo00HgzhNp-UCDdZm63_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192165030024:android:4072e5116f06fa30",
+        "android_client_info": {
+          "package_name": "app.garderobel.garderobelappen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192165030024-7jscec52ks4kdpr325epc9auohopnivi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.garderobel.garderobelappen",
+            "certificate_hash": "2bf06790d651235b8fdbe315fe1915c8c1feffad"
+          }
+        },
+        {
+          "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDsmlerkWMqUWo00HgzhNp-UCDdZm63_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192165030024-cd8ujjcs23bignbl8popaffavs7aehci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
