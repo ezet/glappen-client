@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garderobelappen/sign_in.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import 'locator.dart';
 import 'dashboard.dart';
+import 'locator.dart';
 
 void main() {
+  getLocator();
   runApp(
     Garderobelappen(),
   );
@@ -28,10 +28,8 @@ class Garderobelappen extends StatelessWidget {
 //      initialRoute: Authenticator.routeName,
     );
 
-    return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-      Provider<GetIt>.value(value: getLocator(context)),
-    ], child: materialApp);
+    return StreamProvider<FirebaseUser>.value(
+        value: FirebaseAuth.instance.onAuthStateChanged, child: materialApp);
   }
 }
 
