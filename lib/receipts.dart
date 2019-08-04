@@ -3,15 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobel_api/models/reservation.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+
+import 'locator.dart';
 
 class Receipts extends StatelessWidget {
   const Receipts({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final api = Provider.of<GetIt>(context).get<GarderobelClient>();
+    final api = locator.get<GarderobelClient>();
     final user = Provider.of<FirebaseUser>(context);
     final reservations = api.findReservationsForUser(user.uid);
     return StreamProvider.value(value: reservations, child: ReceiptsList());
@@ -24,7 +25,7 @@ class ReceiptsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    api = Provider.of<GetIt>(context).get();
+    api = locator.get();
     user = Provider.of<FirebaseUser>(context);
     // TODO: implement build
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];

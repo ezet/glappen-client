@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/garderobel_client.dart';
+import 'package:garderobelappen/3ds_auth.dart';
 import 'package:garderobelappen/receipts.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import 'GlappenService.dart';
+import 'locator.dart';
 import 'scanner.dart';
 
 class Dashboard extends StatefulWidget {
@@ -190,7 +192,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _handleScanResult(String qrCode) async {
-    final api = Provider.of<GetIt>(context).get<GarderobelClient>();
+    final api = locator.get<GarderobelClient>();
     final currentReservations = await api.findReservationsForCode(qrCode, user.uid);
     if (currentReservations.isEmpty)
       _handleNewReservation(qrCode);
@@ -199,8 +201,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _handleNewReservation(String qrCode) async {
-    final api = Provider.of<GetIt>(context).get<GarderobelClient>();
-    final reservation = await api.requestCheckIn(qrCode, user.uid);
+    final api = locator.get<GlappenService>();
+    final reservation = await api.createPaymentIntent('card_1F3o2DKL33qOII4gEqNgzHxG');
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ScaAuth(reservation)));
+
+//    final reservation = await api.requestCheckIn(qrCode, user.uid);
+
     if (reservation == null)
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),

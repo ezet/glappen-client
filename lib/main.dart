@@ -63,7 +63,7 @@ class _AuthenticatorState extends State<Authenticator> {
     if (_currentUser == null) {
       return SignIn();
     } else {
-//      final api = Provider.of<GetIt>(context).get<GladminApi>();
+//      final api = locator.get<GladminApi>();
 //      final user = User(
 //          docId: _currentUser.uid,
 //          name: _currentUser.displayName,

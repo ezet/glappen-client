@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:garderobelappen/locator.dart';
 import 'package:stripe_api/stripe_api.dart';
+
+import 'GlappenService.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -8,13 +11,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final TextEditingController controller = new TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    Stripe.init('pk_test_your_stripe_key');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +57,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _startSession() {
-    CustomerSession.initCustomerSession(_createEphemeralKey);
+//    CustomerSession.initCustomerSession(_createEphemeralKey);
   }
 
   void _getCustomer() async {

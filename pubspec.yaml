@@ -35,6 +35,7 @@ dependencies:
   firebase_core: ^0.4.0+1
   cloud_firestore: ^0.12.9
   firebase_auth: ^0.11.1+12
+  cloud_functions: ^0.4.1
 
 
   #  qr_code_scanner: ^0.0.10
