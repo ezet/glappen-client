@@ -20,6 +20,8 @@ class SignIn extends StatelessWidget {
       ],
       avoidBottomInset: true,
       showBar: true,
+      bottomPadding: 0,
+      horizontalPadding: 0,
     );
   }
 }

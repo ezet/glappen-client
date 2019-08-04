@@ -28,7 +28,14 @@ packages:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.7"
+    version: "0.12.9"
+  cloud_functions:
+    dependency: transitive
+    description:
+      name: cloud_functions
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   collection:
     dependency: transitive
     description:
@@ -49,21 +56,21 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.11.1+7"
+    version: "0.11.1+12"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0+6"
+    version: "0.4.0+8"
   firebase_ui:
     dependency: "direct main"
     description:
       name: firebase_ui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.7"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -91,7 +98,7 @@ packages:
   garderobel_api:
     dependency: "direct main"
     description:
-      path: garderobel_api
+      path: "..\\garderobel_api"
       relative: true
     source: path
     version: "0.0.1"
@@ -108,7 +115,7 @@ packages:
       name: google_sign_in
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.6"
   matcher:
     dependency: transitive
     description:
@@ -226,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.10+4"
 sdks:
   dart: ">=2.2.2 <3.0.0"
   flutter: ">=1.5.0 <2.0.0"

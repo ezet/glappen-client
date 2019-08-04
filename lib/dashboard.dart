@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:garderobel_api/garderobel_api.dart';
+import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobelappen/receipts.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +43,7 @@ class _DashboardState extends State<Dashboard> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.orange,
         onPressed: () async {
+//          Navigator.push(context, MaterialPageRoute(builder: (context) => Checkout()));
           final result = await Navigator.push<String>(
               context, MaterialPageRoute(builder: (context) => Scanner()));
           _handleScanResult(result);
@@ -90,9 +91,16 @@ class _DashboardState extends State<Dashboard> {
                       ListTile(
                         title: Text("Privay Policy"),
                       ),
+//                      ListTile(
+//                        title: Text("Terms of Service"),
+//                      ),
                       ListTile(
-                        title: Text("Terms of Service"),
-                      ),
+                        title: Text("Sign out"),
+                        onTap: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pop(context);
+                        },
+                      )
                     ],
                   ))
             ],
@@ -182,7 +190,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _handleScanResult(String qrCode) async {
-    final GarderobelApi api = Provider.of<GetIt>(context).get<GarderobelApi>();
+    final api = Provider.of<GetIt>(context).get<GarderobelClient>();
     final currentReservations = await api.findReservationsForCode(qrCode, user.uid);
     if (currentReservations.isEmpty)
       _handleNewReservation(qrCode);
@@ -191,8 +199,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _handleNewReservation(String qrCode) async {
-    final GarderobelApi api = Provider.of<GetIt>(context).get<GarderobelApi>();
-    final reservation = await api.createReservation(qrCode, user.uid);
+    final api = Provider.of<GetIt>(context).get<GarderobelClient>();
+    final reservation = await api.requestCheckIn(qrCode, user.uid);
     if (reservation == null)
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),
