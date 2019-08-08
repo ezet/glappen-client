@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobelappen/3ds_auth.dart';
 import 'package:garderobelappen/receipts.dart';
+import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
 
 import 'GlappenService.dart';
@@ -84,6 +85,8 @@ class _DashboardState extends State<Dashboard> {
                       ListTile(
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
+                        onTap: () => Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),

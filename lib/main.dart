@@ -16,6 +16,12 @@ void main() {
   );
 }
 
+class StripeData {
+  final customerId = 'cus_FXX6ahUoQ3Eqb7';
+  final publishableKey = 'pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47';
+  final secretKey = 'sk_test_ATY8QjLKqZMGA4DY64SaOhoe0091RWsvuT';
+}
+
 class Garderobelappen extends StatelessWidget {
   static const String _title = 'Garderobeladmin';
 
@@ -28,8 +34,10 @@ class Garderobelappen extends StatelessWidget {
 //      initialRoute: Authenticator.routeName,
     );
 
-    return StreamProvider<FirebaseUser>.value(
-        value: FirebaseAuth.instance.onAuthStateChanged, child: materialApp);
+    return MultiProvider(providers: [
+      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+      Provider.value(value: StripeData()),
+    ], child: materialApp);
   }
 }
 
