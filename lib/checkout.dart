@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garderobelappen/locator.dart';
-import 'package:stripe_api/stripe_api.dart';
+import 'package:stripe_api/src/stripe_api.dart';
 
 import 'GlappenService.dart';
 

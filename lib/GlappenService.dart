@@ -22,4 +22,24 @@ class GlappenService {
       return null;
     }
   }
+
+  Future<String> createEphemeralKey(String apiVersion) async {
+//    final url =
+//        'https://api.example/generate-ephemeral-key?api_version=$apiVersion';
+//    print(url);
+//
+//    final response = await http.get(
+//      url,
+//      headers: _getHeaders(accessToken: _accessToken),
+//    );
+//
+//    final d = json.decode(response.body);
+//    print(d);
+//    if (response.statusCode == 200) {
+//      final key = json.encode(d['data']);
+//      return key;
+//    } else {
+//      throw Exception('Failed to get token');
+//    }
+  }
 }
