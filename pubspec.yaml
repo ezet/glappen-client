@@ -70,6 +70,11 @@ flutter:
 
   assets:
     - assets/scheckout.html
+    - icons/amex.png
+    - icons/discover.png
+    - icons/mastercard.png
+    - icons/visa.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

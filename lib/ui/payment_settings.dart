@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garderobelappen/main.dart';
+import 'package:garderobelappen/ui/add_payment_method.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_api/stripe.dart';
 
@@ -19,7 +20,7 @@ class PaymentSettings extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              _buildBottomSheet(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
             },
           )
         ],
@@ -29,68 +30,34 @@ class PaymentSettings extends StatelessWidget {
         initialData: {},
         child: PaymentMethodsList(),
         catchError: (context, error) {
-          debugPrint(error);
           return {};
         },
       ),
     );
-  }
-
-  _buildBottomSheet(BuildContext context) {
-    var radius = Radius.circular(10);
-    var brand = "";
-    var valid = true;
-    var complete = false;
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        elevation: 10,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: radius, topRight: radius)),
-        builder: (ctx) => Container(
-              height: 400,
-              child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      TextFormField(
-                        autovalidate: true,
-                        validator: (String text) =>
-                            isValidLuhnNumber(text) ? null : "Invalid number",
-                        controller: controller,
-                        decoration:
-                            InputDecoration(errorText: valid == false ? "Invalid number" : null),
-                        inputFormatters: [
-                          CardNumberFormatter(onCardBrandChanged: (brand) {
-                            print('onCardBrandChanged : ' + brand);
-                            brand = brand;
-                          }, onCardNumberComplete: () {
-                            print('onCardNumberComplete');
-                            complete = true;
-                          }),
-                        ],
-                      ),
-                      TextField()
-                    ],
-                  )),
-            ));
   }
 }
 
 class PaymentMethodsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final stripeApi = StripeApiHandler();
+    final stripeData = Provider.of<StripeData>(context);
     final response = Provider.of<Map<String, dynamic>>(context);
     final List listData = response['data'] ?? [];
-    debugPrint(response.toString());
     return ListView.builder(
         itemCount: listData.length,
         itemBuilder: (BuildContext context, int index) {
           final data = listData[index];
           final card = data['card'];
           return ListTile(
-            onTap: () {},
+            onLongPress: () async {
+              final result = await stripeApi.detachPaymentMethod(
+                  stripeData.customerId, data['id'], stripeData.secretKey);
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Payment method successfully deleted.'),
+              ));
+            },
+            onTap: () async {},
             subtitle: Text(card['last4']),
             title: Text(card['brand']),
             leading: Icon(Icons.credit_card),
