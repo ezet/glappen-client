@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ScaAuth extends StatelessWidget {
-  ScaAuth(this.url);
+  ScaAuth(this.action) : url = action['redirect_to_url']['url'];
 
+  final Map<String, dynamic> action;
   final String url;
 
   @override

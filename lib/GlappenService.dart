@@ -9,9 +9,22 @@ class GlappenService {
 
   GlappenService(this.client, this.cf);
 
-  Future<String> createPaymentIntent(String paymentMethodId) async {
+  Future<Map<String, dynamic>> requestCheckIn(String paymentMethodId) async {
     final HttpsCallable callable = cf.getHttpsCallable(
-      functionName: 'requestPaymentIntent',
+      functionName: 'requestCheckIn',
+    );
+    try {
+      final result = await callable.call({'paymentMethodId': paymentMethodId});
+      return result.data;
+    } on CloudFunctionsException catch (e) {
+      log(e.message);
+      return null;
+    }
+  }
+
+  Future<String> confirmPayment(String paymentIntentId, String paymentMethodId) async {
+    final HttpsCallable callable = cf.getHttpsCallable(
+      functionName: 'requestCheckIn',
     );
     try {
       final result = await callable.call({'paymentMethodId': paymentMethodId});

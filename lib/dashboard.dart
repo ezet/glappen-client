@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/garderobel_client.dart';
-import 'package:garderobelappen/3ds_auth.dart';
 import 'package:garderobelappen/receipts.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
 
+import '3ds_auth.dart';
 import 'GlappenService.dart';
 import 'locator.dart';
 import 'scanner.dart';
@@ -205,16 +205,17 @@ class _DashboardState extends State<Dashboard> {
 
   _handleNewReservation(String qrCode) async {
     final api = locator.get<GlappenService>();
-    final reservation = await api.createPaymentIntent('card_1F3o2DKL33qOII4gEqNgzHxG');
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ScaAuth(reservation)));
-
-//    final reservation = await api.requestCheckIn(qrCode, user.uid);
-
-    if (reservation == null)
+    final result = await api.requestCheckIn('pm_card_visa');
+    if (result['action'] != null) {
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ScaAuth(result['action'])));
+//        api.confirmPayment(paymentMethodId)
+    }
+    if (result == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),
       ));
-    else {
+    } else {
       scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
     }
   }

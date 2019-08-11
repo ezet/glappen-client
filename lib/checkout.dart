@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garderobelappen/locator.dart';
 import 'package:stripe_api/src/stripe_api.dart';
-
-import 'GlappenService.dart';
 
 class MyApp extends StatefulWidget {
   @override
