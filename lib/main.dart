@@ -35,7 +35,8 @@ class Garderobelappen extends StatelessWidget {
     );
 
     return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+      StreamProvider<FirebaseUser>.value(
+          value: FirebaseAuth.instance.onAuthStateChanged),
       Provider.value(value: StripeData()),
     ], child: materialApp);
   }
