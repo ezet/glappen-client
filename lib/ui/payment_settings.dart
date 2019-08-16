@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:garderobelappen/main.dart';
 import 'package:garderobelappen/ui/add_payment_method.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_api/stripe.dart';
+
+import '../locator.dart';
 
 class PaymentSettings extends StatelessWidget {
   final TextEditingController controller = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final stripeApi = StripeApiHandler();
-    final stripeData = Provider.of<StripeData>(context);
-    final future = stripeApi.listPaymentMethods(stripeData.customerId, stripeData.secretKey);
+    final session = locator.get<CustomerSession>();
+    final future = session.listPaymentMethods();
 
     return Scaffold(
       appBar: AppBar(
@@ -20,7 +20,8 @@ class PaymentSettings extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddPaymentMethod()));
             },
           )
         ],
@@ -40,8 +41,7 @@ class PaymentSettings extends StatelessWidget {
 class PaymentMethodsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final stripeApi = StripeApiHandler();
-    final stripeData = Provider.of<StripeData>(context);
+    final stripeSession = locator.get<CustomerSession>();
     final response = Provider.of<Map<String, dynamic>>(context);
     final List listData = response['data'] ?? [];
     return ListView.builder(
@@ -51,8 +51,8 @@ class PaymentMethodsList extends StatelessWidget {
           final card = data['card'];
           return ListTile(
             onLongPress: () async {
-              final result = await stripeApi.detachPaymentMethod(
-                  stripeData.customerId, data['id'], stripeData.secretKey);
+              final result =
+                  await stripeSession.detachPaymentMethod(data['id']);
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text('Payment method successfully deleted.'),
               ));
