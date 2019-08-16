@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:garderobel_api/garderobel_client.dart';
+import 'package:garderobelappen/main.dart';
 
 class GlappenService {
   GarderobelClient client;
@@ -22,7 +23,8 @@ class GlappenService {
     }
   }
 
-  Future<String> confirmPayment(String paymentIntentId, String paymentMethodId) async {
+  Future<String> confirmPayment(
+      String paymentIntentId, String paymentMethodId) async {
     final HttpsCallable callable = cf.getHttpsCallable(
       functionName: 'requestCheckIn',
     );
@@ -36,23 +38,20 @@ class GlappenService {
     }
   }
 
-  Future<String> createEphemeralKey(String apiVersion) async {
-//    final url =
-//        'https://api.example/generate-ephemeral-key?api_version=$apiVersion';
-//    print(url);
-//
-//    final response = await http.get(
-//      url,
-//      headers: _getHeaders(accessToken: _accessToken),
-//    );
-//
-//    final d = json.decode(response.body);
-//    print(d);
-//    if (response.statusCode == 200) {
-//      final key = json.encode(d['data']);
-//      return key;
-//    } else {
-//      throw Exception('Failed to get token');
-//    }
+  Future<String> getEphemeralKey(String apiVersion) async {
+    final callable = cf.getHttpsCallable(
+      functionName: 'getEphemeralKey',
+    );
+    try {
+      final result = await callable.call({apiVersion: apiVersion});
+      return result.data['key'];
+    } on CloudFunctionsException catch (e) {
+      log(e.message);
+      return null;
+    }
+  }
+
+  Stream<StripeData> getCurrentUserStripeId() {
+    return client.getCurrentUser().map((item) => StripeData(item['stripeId']));
   }
 }

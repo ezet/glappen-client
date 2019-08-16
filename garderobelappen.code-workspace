@@ -5,6 +5,12 @@
 		},
 		{
 			"path": "C:\\Users\\larsd\\Development\\Garderobelappen\\firebase"
+		},
+		{
+			"path": "C:\\Users\\larsd\\Development\\Garderobelappen\\garderobel_api"
+		},
+		{
+			"path": "C:\\Users\\larsd\\Development\\Garderobelappen\\stripe_api"
 		}
 	]
 }

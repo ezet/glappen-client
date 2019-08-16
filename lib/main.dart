@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:garderobelappen/sign_in.dart';
 import 'package:provider/provider.dart';
 
+import 'GlappenService.dart';
 import 'dashboard.dart';
 import 'locator.dart';
 
@@ -17,9 +18,8 @@ void main() {
 }
 
 class StripeData {
-  final customerId = 'cus_FXX6ahUoQ3Eqb7';
-  final publishableKey = 'pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47';
-  final secretKey = 'sk_test_ATY8QjLKqZMGA4DY64SaOhoe0091RWsvuT';
+  final customerId;
+  StripeData(this.customerId);
 }
 
 class Garderobelappen extends StatelessWidget {
@@ -37,7 +37,9 @@ class Garderobelappen extends StatelessWidget {
     return MultiProvider(providers: [
       StreamProvider<FirebaseUser>.value(
           value: FirebaseAuth.instance.onAuthStateChanged),
-      Provider.value(value: StripeData()),
+      StreamProvider<StripeData>.value(
+        value: locator.get<GlappenService>().getCurrentUserStripeId(),
+      ),
     ], child: materialApp);
   }
 }
