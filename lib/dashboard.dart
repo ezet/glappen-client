@@ -6,6 +6,7 @@ import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobelappen/receipts.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
+import 'package:stripe_api/stripe.dart';
 
 import '3ds_auth.dart';
 import 'GlappenService.dart';
@@ -66,14 +67,18 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(user.photoUrl),
                         radius: 16,
                       )),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[Text(user.displayName), Text(user.email)],
+                    children: <Widget>[
+                      Text(user.displayName),
+                      Text(user.email)
+                    ],
                   )
                 ],
               ),
@@ -86,7 +91,9 @@ class _DashboardState extends State<Dashboard> {
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
                         onTap: () => Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),
@@ -166,7 +173,8 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildBottomAppBar() {
     return BottomAppBar(
-        shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+        shape: AutomaticNotchedShape(
+            RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         elevation: 10,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4),
@@ -189,14 +197,16 @@ class _DashboardState extends State<Dashboard> {
                             onTap: () {
                               _showFilterSheet();
                             },
-                            child: Icon(Icons.more_vert, color: Colors.black87))))
+                            child:
+                                Icon(Icons.more_vert, color: Colors.black87))))
               ]),
         ));
   }
 
   _handleScanResult(String qrCode) async {
     final api = locator.get<GarderobelClient>();
-    final currentReservations = await api.findReservationsForCode(qrCode, user.uid);
+    final currentReservations =
+        await api.findReservationsForCode(qrCode, user.uid);
     if (currentReservations.isEmpty)
       _handleNewReservation(qrCode);
     else
@@ -205,18 +215,28 @@ class _DashboardState extends State<Dashboard> {
 
   _handleNewReservation(String qrCode) async {
     final api = locator.get<GlappenService>();
-    final result = await api.requestCheckIn('pm_card_visa');
-    if (result['action'] != null) {
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ScaAuth(result['action'])));
-//        api.confirmPayment(paymentMethodId)
-    }
+    final stripe = locator.get<Stripe>();
+    final result = await api.requestCheckIn('pm_card_threeDSecure2Required');
+
     if (result == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),
       ));
+    } else if (result['status'] == 'requires_action') {
+      await Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ScaAuth(result['action'])));
+      final intent =
+          await stripe.retrievePaymentIntent(result['client_secret']);
+      if (intent['status'] == 'requires_confirmation') {
+        await api.confirmPayment(intent['id']);
+      }
+
+      // api.confirmPayment(paymentMethodId)
+    } else if (result['status'] == 'successful') {
+      scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
-      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
+      debugPrint("Payment failed: ${result['status']}");
     }
   }
 

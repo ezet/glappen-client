@@ -23,12 +23,15 @@ class GlappenService {
     }
   }
 
-  Future<String> confirmPayment(
-      String paymentIntentId, String paymentMethodId) async {
+  Future<String> confirmPayment(String paymentIntentId,
+      {String paymentMethodId}) async {
     final HttpsCallable callable = cf.getHttpsCallable(
-      functionName: 'requestCheckIn',
+      functionName: 'confirmPayment',
     );
     try {
+      final params = {};
+      if (paymentMethodId != null) params['paymentMethodId'] = paymentMethodId;
+
       final result = await callable.call({'paymentMethodId': paymentMethodId});
       final url = result.data['action']['redirect_to_url']['url'];
       return url;
