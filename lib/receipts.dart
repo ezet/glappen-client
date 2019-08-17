@@ -32,13 +32,16 @@ class ReceiptsList extends StatelessWidget {
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(top: 100),
+        margin: EdgeInsets.only(top: 10, bottom: 0),
         child: Swiper(
           itemBuilder: (context, i) => _buildListItem(context, list[i]),
           itemCount: list?.length ?? 0,
           loop: false,
           viewportFraction: 0.8,
           scale: 0.93,
+          pagination: SwiperPagination(
+              builder: DotSwiperPaginationBuilder(color: Colors.grey, size: 5),
+              alignment: Alignment.topCenter),
         ),
       ),
     );
@@ -46,10 +49,10 @@ class ReceiptsList extends StatelessWidget {
 
   Widget _buildListItem(BuildContext context, Reservation item) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 50, left: 5, right: 5),
+      padding: const EdgeInsets.only(bottom: 50, left: 5, right: 5, top: 40),
       child: Card(
         // color: Colors.grey,
-        elevation: 16,
+        elevation: 12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[

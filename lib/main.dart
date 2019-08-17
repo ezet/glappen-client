@@ -30,16 +30,14 @@ class Garderobelappen extends StatelessWidget {
     var materialApp = MaterialApp(
       title: _title,
       theme: ThemeData(
-        // accentColor: Colors.lightBlueAccent,
-        primarySwatch: Colors.lime
-        ),
+          // accentColor: Colors.lightBlueAccent,
+          primarySwatch: Colors.orange),
       home: Authenticator(),
 //      initialRoute: Authenticator.routeName,
     );
 
     return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(
-          value: FirebaseAuth.instance.onAuthStateChanged),
+      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
       StreamProvider<StripeData>.value(
         value: locator.get<GlappenService>().getCurrentUserStripeId(),
       ),
