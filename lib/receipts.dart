@@ -32,42 +32,69 @@ class ReceiptsList extends StatelessWidget {
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 100, horizontal: 0),
+        margin: EdgeInsets.only(top: 100),
         child: Swiper(
           itemBuilder: (context, i) => _buildListItem(context, list[i]),
           itemCount: list?.length ?? 0,
           loop: false,
-          // controller: SwiperController(),
+          viewportFraction: 0.8,
+          scale: 0.93,
         ),
       ),
     );
-
-    // return ListView.builder(
-    //   itemBuilder: (context, i) => _buildListItem(context, list[i]),
-    //   itemCount: list?.length ?? 0,
-    // );
   }
 
   Widget _buildListItem(BuildContext context, Reservation item) {
-    return Card(
-      // color: Colors.grey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50, left: 5, right: 5),
+      child: Card(
+        // color: Colors.grey,
+        elevation: 16,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.orangeAccent,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
+                  child: Column(
+                    children: <Widget>[
+                      Spacer(),
+                      Expanded(
+                        child: Center(
+                          child: Text(item.hangerName,
+                              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(child: Text(item.wardrobeName ?? "Wardrobe")),
+                        flex: 1,
+                      )
+                    ],
+                  ),
+                )),
+            Expanded(
               child: Container(
-            decoration: BoxDecoration(
-              color: Colors.orangeAccent,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
-            child: Text(
-              "Test",
-              style: TextStyle(fontSize: 20),
-            ),
-          )),
-          Expanded(child: Container(),
-          flex: 3,)
-        ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Text('HENT'),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              flex: 3,
+            )
+          ],
+        ),
       ),
     );
   }
