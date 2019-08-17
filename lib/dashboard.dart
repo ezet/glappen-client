@@ -35,18 +35,18 @@ class _DashboardState extends State<Dashboard> {
 //      appBar: _buildAppBar(),
       body: Receipts(),
 //      bottomNavigationBar: _buildBottomNavigationBar(),
-      bottomNavigationBar: _buildBottomAppBar(),
+      bottomNavigationBar: _buildBottomAppBar(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
 //        label: Text("Check-in"),
 //        icon: Icon(Icons.add),
         child: Icon(
           Icons.add,
-          size: 40,
+          size: 24,
         ),
         elevation: 5,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.orange,
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
         onPressed: () async {
 //          Navigator.push(context, MaterialPageRoute(builder: (context) => Checkout()));
           final result = await Navigator.push<String>(
@@ -68,14 +68,18 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(user.photoUrl),
                         radius: 16,
                       )),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[Text(user.displayName), Text(user.email)],
+                    children: <Widget>[
+                      Text(user.displayName),
+                      Text(user.email)
+                    ],
                   )
                 ],
               ),
@@ -88,7 +92,9 @@ class _DashboardState extends State<Dashboard> {
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
                         onTap: () => Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),
@@ -166,12 +172,14 @@ class _DashboardState extends State<Dashboard> {
     ));
   }
 
-  Widget _buildBottomAppBar() {
+  Widget _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-        shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+        shape: AutomaticNotchedShape(
+            RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         elevation: 10,
+        color: Theme.of(context).canvasColor,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4),
+          padding: EdgeInsets.symmetric(horizontal: 8),
           child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,14 +199,15 @@ class _DashboardState extends State<Dashboard> {
                             onTap: () {
                               _showFilterSheet();
                             },
-                            child: Icon(Icons.more_vert, color: Colors.black87))))
+                            child: Icon(Icons.search, color: Colors.black87))))
               ]),
         ));
   }
 
   _handleScanResult(String qrCode) async {
     final api = locator.get<GarderobelClient>();
-    final currentReservations = await api.findReservationsForCode(qrCode, user.uid);
+    final currentReservations =
+        await api.findReservationsForCode(qrCode, user.uid);
     if (currentReservations.isEmpty)
       _handleNewReservation(qrCode);
     else
@@ -221,15 +230,19 @@ class _DashboardState extends State<Dashboard> {
       });
 
       await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ScaAuth(result['nextAction'])));
-      final intent = await stripeSession.retrievePaymentIntent(result['clientSecret']);
+          context,
+          MaterialPageRoute(
+              builder: (context) => ScaAuth(result['nextAction'])));
+      final intent =
+          await stripeSession.retrievePaymentIntent(result['clientSecret']);
       if (intent['status'] == 'requires_confirmation') {
         await api.confirmPayment(intent['id']);
       }
 
       // api.confirmPayment(paymentMethodId)
     } else if (result['status'] == 'successful') {
-      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
+      scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
       debugPrint("Payment failed: ${result['status']}");
     }
