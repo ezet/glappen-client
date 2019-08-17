@@ -42,6 +42,8 @@ dependencies:
   #  barcode_scan: ^1.0.0
   qr_mobile_vision: ^0.2.2
 
+  flutter_swiper: ^1.1.6
+
   provider: ^3.0.0+1
   get_it: ^1.0.3+2
 
