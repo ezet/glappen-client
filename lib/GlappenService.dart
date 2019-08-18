@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
@@ -24,17 +25,16 @@ class GlappenService {
     }
   }
 
-  Future<String> confirmPayment(String paymentIntentId, {String paymentMethodId}) async {
+  Future<Map> confirmPayment(String reservationId, {String paymentMethodId}) async {
     final HttpsCallable callable = cf.getHttpsCallable(
       functionName: 'confirmPayment',
     );
     try {
-      final params = {};
+      final params = {'reservation': reservationId};
       if (paymentMethodId != null) params['paymentMethodId'] = paymentMethodId;
 
-      final result = await callable.call({'paymentMethodId': paymentMethodId});
-      final url = result.data['action']['redirect_to_url']['url'];
-      return url;
+      final result = await callable.call(params);
+      return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);
       return null;
@@ -46,8 +46,10 @@ class GlappenService {
       functionName: 'getEphemeralKey',
     );
     try {
-      final result = await callable.call({apiVersion: apiVersion});
-      return result.data['key'];
+      final result = await callable.call({'stripeversion': apiVersion});
+      final key = result.data['key'];
+      final jsonKey = json.encode(key);
+      return jsonKey;
     } on CloudFunctionsException catch (e) {
       log(e.message);
       return null;

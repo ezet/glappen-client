@@ -1,15 +1,15 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobelappen/receipts.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_api/stripe.dart';
 
-import '3ds_auth.dart';
 import 'GlappenService.dart';
 import 'locator.dart';
 import 'scanner.dart';
@@ -68,18 +68,14 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(user.photoUrl),
                         radius: 16,
                       )),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(user.displayName),
-                      Text(user.email)
-                    ],
+                    children: <Widget>[Text(user.displayName), Text(user.email)],
                   )
                 ],
               ),
@@ -92,9 +88,7 @@ class _DashboardState extends State<Dashboard> {
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
                         onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PaymentSettings())),
+                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),
@@ -174,8 +168,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-        shape: AutomaticNotchedShape(
-            RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+        shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         elevation: 10,
         color: Theme.of(context).canvasColor,
         child: Padding(
@@ -206,8 +199,7 @@ class _DashboardState extends State<Dashboard> {
 
   _handleScanResult(String qrCode) async {
     final api = locator.get<GarderobelClient>();
-    final currentReservations =
-        await api.findReservationsForCode(qrCode, user.uid);
+    final currentReservations = await api.findReservationsForCode(qrCode, user.uid);
     if (currentReservations.isEmpty)
       _handleNewReservation(qrCode);
     else
@@ -216,35 +208,31 @@ class _DashboardState extends State<Dashboard> {
 
   _handleNewReservation(String qrCode) async {
     final api = locator.get<GlappenService>();
-    final stripeSession = locator.get<CustomerSession>();
-    final result = await api.requestCheckIn('pm_card_threeDSecure2Required');
+    final reservationData = await api.requestCheckIn('pm_card_threeDSecure2Required');
 
-    if (result == null) {
+    if (reservationData == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),
       ));
-    } else if (result['status'] == 'requires_action') {
-      final channel = EventChannel('poc.3ds.glappen.io/events');
-      channel.receiveBroadcastStream().listen((d) {
-        debugPrint(d.toString());
-      });
-
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ScaAuth(result['nextAction'])));
-      final intent =
-          await stripeSession.retrievePaymentIntent(result['clientSecret']);
+    } else if (reservationData['status'] == 'requires_action') {
+      final intent = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ScaAuth(reservationData['nextAction'])));
       if (intent['status'] == 'requires_confirmation') {
-        await api.confirmPayment(intent['id']);
+        final confirmation = await api.confirmPayment(reservationData['id']);
+        if (confirmation['status'] == 'requires_capture') {
+          scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
+        } else {
+          scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text("There was an error processing your payment. Please try again.")));
+        }
+      } else {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text("There was an error processing your payment. Please try again.")));
       }
-
-      // api.confirmPayment(paymentMethodId)
-    } else if (result['status'] == 'successful') {
-      scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text("Reservation successful")));
+    } else if (reservationData['status'] == 'requires_capture') {
+      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
-      debugPrint("Payment failed: ${result['status']}");
+      debugPrint("Payment failed: ${reservationData['status']}");
     }
   }
 

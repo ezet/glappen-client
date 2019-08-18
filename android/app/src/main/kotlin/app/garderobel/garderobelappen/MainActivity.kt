@@ -23,8 +23,10 @@ class MainActivity : FlutterActivity() {
 
         EventChannel(flutterView, PaymentEvents).setStreamHandler(
             object : EventChannel.StreamHandler {
-                override fun onListen(p0: Any, p1: EventChannel.EventSink) {
-                    linkReceiver = DeepLinkReceiver(p1)
+                override fun onListen(p0: Any?, p1: EventChannel.EventSink?) {
+                    p1?.let {
+                        linkReceiver = DeepLinkReceiver(it)
+                    }
                 }
 
                 override fun onCancel(p0: Any?) {
