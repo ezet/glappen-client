@@ -64,11 +64,18 @@ class ReceiptsList extends StatelessWidget {
                       borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
                   child: Column(
                     children: <Widget>[
-                      Spacer(),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            item.venueName,
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
                       Expanded(
                         child: Center(
                           child: Text(item.hangerName,
-                              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900)),
                         ),
                       ),
                       Expanded(
@@ -85,6 +92,7 @@ class ReceiptsList extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
+                      Text(item.paymentState.toString()),
                       RaisedButton(
                         onPressed: () {},
                         child: Text('HENT'),
@@ -98,20 +106,6 @@ class ReceiptsList extends StatelessWidget {
             )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildListItem2(BuildContext context, Reservation item) {
-    return Card(
-      child: ListTile(
-        onTap: () async {
-          await api.requestCheckOut(item.ref);
-        },
-        title: Text(item?.venueName ?? ''),
-        leading: Icon(Icons.event_note),
-        subtitle: Text(item.state.toString()),
-        trailing: Icon(Icons.arrow_forward_ios),
       ),
     );
   }
