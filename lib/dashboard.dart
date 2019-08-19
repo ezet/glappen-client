@@ -68,14 +68,18 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(user.photoUrl),
                         radius: 16,
                       )),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[Text(user.displayName), Text(user.email)],
+                    children: <Widget>[
+                      Text(user.displayName),
+                      Text(user.email)
+                    ],
                   )
                 ],
               ),
@@ -88,7 +92,9 @@ class _DashboardState extends State<Dashboard> {
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
                         onTap: () => Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),
@@ -168,8 +174,9 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-        shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
-        elevation: 10,
+        shape: AutomaticNotchedShape(
+            RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+        elevation: 0,
         color: Theme.of(context).canvasColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
@@ -199,7 +206,8 @@ class _DashboardState extends State<Dashboard> {
 
   _handleScanResult(String qrCode) async {
     final api = locator.get<GarderobelClient>();
-    final currentReservations = await api.findReservationsForCode(qrCode, user.uid);
+    final currentReservations =
+        await api.findReservationsForCode(qrCode, user.uid);
     if (currentReservations.isEmpty)
       _handleNewReservation(qrCode);
     else
@@ -208,30 +216,51 @@ class _DashboardState extends State<Dashboard> {
 
   _handleNewReservation(String qrCode) async {
     final api = locator.get<GlappenService>();
-    final reservationData = await api.requestCheckIn('pm_card_threeDSecure2Required');
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => CircularProgressIndicator());
+    final reservationData =
+        await api.requestCheckIn('pm_card_threeDSecure2Required');
 
     if (reservationData == null) {
+      Navigator.of(context).pop();
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),
       ));
     } else if (reservationData['status'] == 'requires_action') {
       final intent = await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ScaAuth(reservationData['nextAction'])));
-      if (intent['status'] == 'requires_confirmation') {
+          context,
+          MaterialPageRoute(
+              builder: (context) => ScaAuth(reservationData['nextAction'])));
+      if (intent == null) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(
+                "There was an error processing your payment. Please try again.")));
+      } else if (intent['status'] == 'requires_confirmation') {
         final confirmation = await api.confirmPayment(reservationData['id']);
         if (confirmation['status'] == 'requires_capture') {
-          scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
+          Navigator.of(context).pop();
+          scaffoldKey.currentState
+              .showSnackBar(SnackBar(content: Text("Reservation successful")));
         } else {
           scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("There was an error processing your payment. Please try again.")));
+              content: Text(
+                  "There was an error processing your payment. Please try again.")));
         }
+      } else if (intent['status'] == 'requires_payment_method') {
+        // todo
       } else {
         scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text("There was an error processing your payment. Please try again.")));
+            content: Text(
+                "There was an error processing your payment. Please try again.")));
       }
     } else if (reservationData['status'] == 'requires_capture') {
-      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
+      Navigator.of(context).pop();
+      scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
+      Navigator.of(context).pop();
       debugPrint("Payment failed: ${reservationData['status']}");
     }
   }

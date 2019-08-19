@@ -29,8 +29,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="3ds.glappen.io"
-                    android:scheme="poc" />
+                    android:host="3ds.stripesdk.io"
+                    android:scheme="stripesdk" />
             </intent-filter>
             <meta-data
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"

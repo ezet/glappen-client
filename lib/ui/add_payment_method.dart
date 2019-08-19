@@ -20,6 +20,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
   @override
   Widget build(BuildContext context) {
     final stripeSession = locator.get<CustomerSession>();
+    final stripe = locator.get<Stripe>();
 
     return Scaffold(
         appBar: AppBar(
@@ -30,8 +31,8 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               onPressed: () async {
                 _formKey.currentState.save();
                 if (_formKey.currentState.validate()) {
-                  final result =
-                      await stripeSession.createPaymentMethod(_cardData);
+                  final result = await stripe.createCardToken(_cardData);
+                  await stripeSession.attachPaymentMethod(result.id);
                   debugPrint(result.toString());
                 }
               },
@@ -69,7 +70,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
                     validator: (text) {
-                      return "";
+                      return null;
                     },
                     onSaved: (text) {
                       final arr = text.split("/");

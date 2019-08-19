@@ -47,8 +47,7 @@ dependencies:
   provider: ^3.0.0+1
   get_it: ^1.0.3+2
 
-  webview_flutter: ^0.3.10+4
-  url_launcher: ^5.1.2
+  shared_preferences: ^0.5.3+4
 
 dev_dependencies:
   flutter_test:

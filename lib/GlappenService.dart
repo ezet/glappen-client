@@ -17,7 +17,7 @@ class GlappenService {
     );
     try {
       final result = await callable
-          .call({'paymentMethodId': paymentMethodId, 'returnUrl': 'poc://3ds.glappen.io'});
+          .call({'paymentMethodId': paymentMethodId, 'returnUrl': 'stripesdk://3ds.stripesdk.io'});
       return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);

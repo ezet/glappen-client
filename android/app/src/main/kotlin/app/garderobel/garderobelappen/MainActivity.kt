@@ -12,7 +12,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 class MainActivity : FlutterActivity() {
 
     companion object {
-        const val PaymentEvents = "poc.3ds.glappen.io/events"
+        const val PaymentEvents = "stripesdk.3ds.stripesdk.io/events"
     }
 
     private var linkReceiver: BroadcastReceiver? = null
