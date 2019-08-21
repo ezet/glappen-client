@@ -39,9 +39,9 @@ class ReceiptsList extends StatelessWidget {
           loop: false,
           viewportFraction: 0.8,
           scale: 0.93,
-          pagination: SwiperPagination(
-              builder: DotSwiperPaginationBuilder(color: Colors.grey, size: 5),
-              alignment: Alignment.topCenter),
+          // pagination: SwiperPagination(
+              // builder: DotSwiperPaginationBuilder(color: Colors.grey, size: 5),
+              // alignment: Alignment.topCenter),
         ),
       ),
     );

@@ -16,8 +16,10 @@ class GlappenService {
       functionName: 'requestCheckIn',
     );
     try {
-      final result = await callable
-          .call({'paymentMethodId': paymentMethodId, 'returnUrl': 'stripesdk://3ds.stripesdk.io'});
+      final result = await callable.call({
+        'paymentMethodId': paymentMethodId,
+        'returnUrl': 'stripesdk://3ds.stripesdk.io'
+      });
       return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);
@@ -25,7 +27,8 @@ class GlappenService {
     }
   }
 
-  Future<Map> confirmPayment(String reservationId, {String paymentMethodId}) async {
+  Future<Map> confirmPayment(String reservationId,
+      {String paymentMethodId}) async {
     final HttpsCallable callable = cf.getHttpsCallable(
       functionName: 'confirmPayment',
     );
@@ -50,6 +53,19 @@ class GlappenService {
       final key = result.data['key'];
       final jsonKey = json.encode(key);
       return jsonKey;
+    } on CloudFunctionsException catch (e) {
+      log(e.message);
+      return null;
+    }
+  }
+
+  Future<Map> createPaymentMethod(String paymentMethodId) async {
+    final callable = cf.getHttpsCallable(
+      functionName: 'addPaymentMethod',
+    );
+    try {
+      final result = await callable.call({'paymentMethodId': paymentMethodId});
+      return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);
       return null;

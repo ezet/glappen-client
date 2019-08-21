@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stripe_api/stripe.dart';
 
+import '../GlappenService.dart';
 import '../locator.dart';
 import 'utils/masked_text_controller.dart';
 
@@ -21,6 +22,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
   Widget build(BuildContext context) {
     final stripeSession = locator.get<CustomerSession>();
     final stripe = locator.get<Stripe>();
+    final glappen = locator.get<GlappenService>();
 
     return Scaffold(
         appBar: AppBar(
@@ -31,9 +33,10 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               onPressed: () async {
                 _formKey.currentState.save();
                 if (_formKey.currentState.validate()) {
-                  final result = await stripe.createCardToken(_cardData);
-                  await stripeSession.attachPaymentMethod(result.id);
-                  debugPrint(result.toString());
+                  final token = await stripe.createCardToken(_cardData);
+                  final setupIntent = await glappen.createPaymentMethod(token.id);
+                  // await stripeSession.attachPaymentMethod(result.id);
+                  debugPrint(token.toString());
                 }
               },
             )

@@ -8,6 +8,7 @@ import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobelappen/receipts.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stripe_api/stripe.dart';
 
 import 'GlappenService.dart';
@@ -220,8 +221,12 @@ class _DashboardState extends State<Dashboard> {
         context: context,
         barrierDismissible: false,
         builder: (context) => CircularProgressIndicator());
-    final reservationData =
-        await api.requestCheckIn('pm_card_threeDSecure2Required');
+
+    final prefs = await SharedPreferences.getInstance();
+    final paymentMethodId =
+        prefs.get(DefaultPaymentMethod.defaultPaymentMethod);
+
+    final reservationData = await api.requestCheckIn(paymentMethodId);
 
     if (reservationData == null) {
       Navigator.of(context).pop();
