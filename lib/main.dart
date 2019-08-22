@@ -23,7 +23,7 @@ class StripeData {
 }
 
 class Garderobelappen extends StatelessWidget {
-  static const String _title = 'Garderobeladmin';
+  static const String _title = 'Garderobelappen';
 
   @override
   Widget build(BuildContext context) {

@@ -220,7 +220,7 @@ class _DashboardState extends State<Dashboard> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => CircularProgressIndicator());
+        builder: (context) => Center(child: CircularProgressIndicator()));
 
     final prefs = await SharedPreferences.getInstance();
     final paymentMethodId =
@@ -236,7 +236,7 @@ class _DashboardState extends State<Dashboard> {
     } else if (reservationData['status'] == 'requires_action') {
       final intent = await Navigator.push(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute<Map<String, String>>(
               builder: (context) => ScaAuth(reservationData['nextAction'])));
       if (intent == null) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
