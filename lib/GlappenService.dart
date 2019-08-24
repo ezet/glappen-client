@@ -11,29 +11,16 @@ class GlappenService {
 
   GlappenService(this.client, this.cf);
 
-  Future<Map> requestCheckIn(String paymentMethodId) async {
+  /// Utility function to call a Firebase Function
+  Future<T> _call<T>(String name, Map params) async {
+    log('GlappenService._call, $name, $params');
     final HttpsCallable callable = cf.getHttpsCallable(
-      functionName: 'requestCheckIn',
+      functionName: name,
     );
     try {
-      final result = await callable
-          .call({'paymentMethodId': paymentMethodId, 'returnUrl': 'stripesdk://3ds.stripesdk.io'});
-      return result.data;
-    } on CloudFunctionsException catch (e) {
-      log(e.message);
-      return null;
-    }
-  }
-
-  Future<Map> confirmPayment(String reservationId, {String paymentMethodId}) async {
-    final HttpsCallable callable = cf.getHttpsCallable(
-      functionName: 'confirmPayment',
-    );
-    try {
-      final params = {'reservation': reservationId};
-      if (paymentMethodId != null) params['paymentMethodId'] = paymentMethodId;
-
       final result = await callable.call(params);
+      print(result);
+      print(result.data);
       return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);
@@ -41,35 +28,50 @@ class GlappenService {
     }
   }
 
+  /// Request check-in
+  Future<Map> requestCheckIn(String paymentMethodId) async {
+    return _call('requestCheckIn',
+        {'paymentMethodId': paymentMethodId, 'returnUrl': 'stripesdk://3ds.stripesdk.io'});
+  }
+
+  /// Cancel an on-going check-in.
+  Future<List<dynamic>> cancelCheckIn(String reservationId) async {
+    return _call('cancelCheckIn', {'reservationId': reservationId});
+  }
+
+  /// Confirm a payment
+  Future<Map> confirmPayment(String reservationId, {String paymentMethodId}) async {
+    final params = {'reservationId': reservationId};
+    if (paymentMethodId != null) params['paymentMethodId'] = paymentMethodId;
+    return _call('confirmPayment', params);
+  }
+
+  /// Confirm a payment
+  Future<Map> requestCheckOut(String reservationId, {String paymentMethodId}) async {
+    final params = {'reservationId': reservationId};
+    return _call('confirmCheckIn', params);
+  }
+
+  /// Get a stripe ephemeral key
   Future<String> getEphemeralKey(String apiVersion) async {
-    final callable = cf.getHttpsCallable(
-      functionName: 'getEphemeralKey',
-    );
-    try {
-      final result = await callable.call({'stripeversion': apiVersion});
-      final key = result.data['key'];
-      final jsonKey = json.encode(key);
-      return jsonKey;
-    } on CloudFunctionsException catch (e) {
-      log(e.message);
-      return null;
-    }
+    final result = await _call('getEphemeralKey', {'stripeversion': apiVersion});
+    final key = result['key'];
+    final jsonKey = json.encode(key);
+    return jsonKey;
   }
 
+  /// Create and attach a payment method
   Future<Map> createPaymentMethod(String paymentMethodId) async {
-    final callable = cf.getHttpsCallable(
-      functionName: 'addPaymentMethod',
-    );
-    try {
-      final result = await callable.call({'paymentMethodId': paymentMethodId});
-      return result.data;
-    } on CloudFunctionsException catch (e) {
-      log(e.message);
-      return null;
-    }
+    return _call('addPaymentMethod', {'paymentMethodId': paymentMethodId});
   }
 
   Stream<StripeData> getCurrentUserStripeId() {
     return client.getCurrentUser().map((item) => StripeData(item['stripeId']));
+  }
+
+  /// Confirm a payment
+  Future<Map> confirmCheckIn(String reservationId, {String paymentMethodId}) async {
+    final params = {'reservationId': reservationId};
+    return _call('confirmCheckIn', params);
   }
 }

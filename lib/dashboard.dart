@@ -239,8 +239,8 @@ class _DashboardState extends State<Dashboard> {
 
     final reservationData = await api.requestCheckIn(paymentMethodId);
 
+    Navigator.of(context).pop();
     if (reservationData == null) {
-      Navigator.of(context).pop();
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("No free hangers"),
       ));
@@ -249,7 +249,6 @@ class _DashboardState extends State<Dashboard> {
           context,
           MaterialPageRoute<Map<String, dynamic>>(
               builder: (context) => ScaAuth(reservationData['nextAction'])));
-      Navigator.of(context).pop();
       if (intent == null) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
             content: Text("There was an error processing your payment. Please try again.")));
@@ -268,10 +267,8 @@ class _DashboardState extends State<Dashboard> {
             content: Text("There was an error processing your payment. Please try again.")));
       }
     } else if (reservationData['status'] == 'requires_capture') {
-      Navigator.of(context).pop();
       scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
-      Navigator.of(context).pop();
       debugPrint("Payment failed: ${reservationData['status']}");
     }
   }
