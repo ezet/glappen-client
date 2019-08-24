@@ -185,6 +185,7 @@ class ReceiptItem extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
+                      Text(item.state.toString()),
                       _buildRaisedButton(context, item),
                       RaisedButton(
                         onPressed: () async {
@@ -223,7 +224,9 @@ class ReceiptItem extends StatelessWidget {
       );
     } else {
       return RaisedButton(
-        onPressed: () {},
+        onPressed: () async {
+          final response = await service.requestCheckOut(item.docId);
+        },
         child: Text('CHECK-OUT'),
         shape: shape2,
       );

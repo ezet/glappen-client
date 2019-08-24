@@ -46,10 +46,10 @@ class GlappenService {
     return _call('confirmPayment', params);
   }
 
-  /// Confirm a payment
-  Future<Map> requestCheckOut(String reservationId, {String paymentMethodId}) async {
+  /// Request check-out
+  Future<Map> requestCheckOut(String reservationId) async {
     final params = {'reservationId': reservationId};
-    return _call('confirmCheckIn', params);
+    return _call('requestCheckOut', params);
   }
 
   /// Get a stripe ephemeral key
@@ -70,7 +70,7 @@ class GlappenService {
   }
 
   /// Confirm a payment
-  Future<Map> confirmCheckIn(String reservationId, {String paymentMethodId}) async {
+  Future<Map> confirmCheckIn(String reservationId) async {
     final params = {'reservationId': reservationId};
     return _call('confirmCheckIn', params);
   }
