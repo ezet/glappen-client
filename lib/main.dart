@@ -19,6 +19,7 @@ void main() {
 
 class StripeData {
   final customerId;
+
   StripeData(this.customerId);
 }
 
@@ -84,7 +85,7 @@ class _AuthenticatorState extends State<Authenticator> {
 //          photoUrl: _currentUser.photoUrl);
 //      api.updateUser(user);
 
-      return Dashboard();
+      return ChangeNotifierProvider.value(value: ScanButtonState(), child: Dashboard());
     }
   }
 

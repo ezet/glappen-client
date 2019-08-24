@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobel_api/models/reservation.dart';
+import 'package:garderobelappen/dashboard.dart';
 import 'package:provider/provider.dart';
 
 import 'locator.dart';
@@ -24,9 +25,27 @@ class RecieptHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
-    if (list.length > 0 && list[0].paymentState == PaymentState.INITIAL) {
-      return Container();
+    if (list.length > 0 && list[0].state.index < ReservationState.PAYMENT_RESERVED.index) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<ScanButtonState>(context).setState(false);
+      });
+      if (list[0].state == ReservationState.PAYMENT_AUTH_REQUIRED) {
+        return Container(
+          child: Center(
+            child: Text("Awaithing authentication"),
+          ),
+        );
+      } else if (list[0].state == ReservationState.PAYMENT_METHOD_REQUIRED) {
+        return Container(
+          child: Center(
+            child: Text("Please select a payment method"),
+          ),
+        );
+      }
     } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<ScanButtonState>(context).setState(true);
+      });
       return ReceiptsList();
     }
   }
@@ -50,29 +69,25 @@ class ReceiptsList extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.orangeAccent,
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(5))),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
                   child: Column(
                     children: <Widget>[
                       Expanded(
                         child: Center(
                           child: Text(
                             item.venueName,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(item.hangerName,
-                              style: TextStyle(
-                                  fontSize: 60, fontWeight: FontWeight.w900)),
+                              style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900)),
                         ),
                       ),
                       Expanded(
-                        child: Center(
-                            child: Text(item.wardrobeName ?? "Wardrobe")),
+                        child: Center(child: Text(item.wardrobeName ?? "Wardrobe")),
                         flex: 1,
                       )
                     ],
@@ -85,12 +100,11 @@ class ReceiptsList extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(item.paymentState.toString()),
+                      Text(item.state.toString()),
                       RaisedButton(
                         onPressed: () {},
                         child: Text('HENT'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                       )
                     ],
                   ),
