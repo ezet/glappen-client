@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stripe_api/stripe.dart';
+import 'package:stripe_sdk/stripe.dart';
 
 import '../GlappenService.dart';
 import '../locator.dart';
@@ -11,8 +11,7 @@ class AddPaymentMethod extends StatefulWidget {
 }
 
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
-  final _cardNumberController =
-      MaskedTextController(mask: '0000 0000 0000 0000');
+  final _cardNumberController = MaskedTextController(mask: '0000 0000 0000 0000');
   final _expiryDateController = MaskedTextController(mask: '00/00');
   final _cvvCodeController = MaskedTextController(mask: '0000');
   final StripeCard _cardData = StripeCard();
@@ -82,9 +81,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                     },
                     controller: _expiryDateController,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Expired Date',
-                        hintText: 'MM/YY'),
+                        border: OutlineInputBorder(), labelText: 'Expired Date', hintText: 'MM/YY'),
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                   ),
@@ -94,8 +91,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
 //                  focusNode: cvvFocusNode,
-                    validator: (text) =>
-                        _cardData.validateCVC() ? null : "Invalid CVC",
+                    validator: (text) => _cardData.validateCVC() ? null : "Invalid CVC",
                     onSaved: (text) => _cardData.cvc = text,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),

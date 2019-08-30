@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobelappen/ui/add_payment_method.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_api/stripe.dart';
+import 'package:stripe_sdk/stripe.dart';
 
 import '../locator.dart';
 
@@ -22,9 +22,7 @@ class PaymentSettings extends StatelessWidget {
               icon: Icon(Icons.add),
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddPaymentMethod()));
+                    context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
               },
             )
           ],
@@ -38,8 +36,7 @@ class PaymentSettings extends StatelessWidget {
               return {};
             },
           ),
-          ChangeNotifierProvider<DefaultPaymentMethod>.value(
-              value: DefaultPaymentMethod())
+          ChangeNotifierProvider<DefaultPaymentMethod>.value(value: DefaultPaymentMethod())
         ], child: PaymentMethodsList()));
   }
 }
@@ -59,9 +56,7 @@ class DefaultPaymentMethod extends ChangeNotifier {
 
   set(String newPaymentMethod) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs
-        .setString(defaultPaymentMethod, newPaymentMethod)
-        .whenComplete(() => prefs.commit());
+    prefs.setString(defaultPaymentMethod, newPaymentMethod).whenComplete(() => prefs.commit());
     paymentMethodId = newPaymentMethod;
     notifyListeners();
   }
@@ -86,8 +81,7 @@ class PaymentMethodsList extends StatelessWidget {
             final card = data['card'];
             return ListTile(
               onLongPress: () async {
-                final result =
-                    await stripeSession.detachPaymentMethod(data['id']);
+                final result = await stripeSession.detachPaymentMethod(data['id']);
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('Payment method successfully deleted.'),
                 ));

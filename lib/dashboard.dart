@@ -9,7 +9,7 @@ import 'package:garderobelappen/receipts.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_api/stripe.dart';
+import 'package:stripe_sdk/stripe.dart';
 
 import 'GlappenService.dart';
 import 'locator.dart';
@@ -245,15 +245,18 @@ class _DashboardState extends State<Dashboard> {
         content: Text("No free hangers"),
       ));
     } else if (reservationData['status'] == 'requires_action') {
-      final intent = await Navigator.push(
-          context,
-          MaterialPageRoute<Map<String, dynamic>>(
-              builder: (context) => ScaAuth(reservationData['nextAction'])));
+      final intent = await launch3ds(reservationData['nextAction']);
       if (intent == null) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
             content: Text("There was an error processing your payment. Please try again.")));
       } else if (intent['status'] == 'requires_confirmation') {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => Center(child: CircularProgressIndicator()));
+
         final confirmation = await api.confirmPayment(reservationData['id']);
+        Navigator.of(context).pop();
         if (confirmation['status'] == 'requires_capture') {
           scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
         } else {

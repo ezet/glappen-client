@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stripe_api/src/stripe_api.dart';
+import 'package:stripe_sdk/src/stripe_api.dart';
 
 class MyApp extends StatefulWidget {
   @override

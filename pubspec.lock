@@ -240,13 +240,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
-  stripe_api:
+  stripe_sdk:
     dependency: "direct main"
     description:
-      path: "..\\stripe_api"
-      relative: true
-    source: path
-    version: "1.1.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: "88eb4d42f33165636e98e493f84f476f3b553213"
+      url: "git://github.com/ezet/stripe_sdk.git"
+    source: git
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -275,6 +277,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  uni_links:
+    dependency: transitive
+    description:
+      name: uni_links
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   url_launcher:
     dependency: transitive
     description:

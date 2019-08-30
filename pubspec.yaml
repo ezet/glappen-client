@@ -24,8 +24,11 @@ dependencies:
   garderobel_api:
     path: ./../garderobel_api
 
-  stripe_api:
-    path: ./../stripe_api
+  stripe_sdk:
+#    path: ./../stripe_api
+    git:
+      url: git://github.com/ezet/stripe_sdk.git
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
