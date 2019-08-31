@@ -79,4 +79,10 @@ class GlappenService {
     final params = {'reservationId': reservationId};
     return _call('confirmCheckIn', params);
   }
+
+  /// Confirm a payment
+  Future<Map> confirmCheckOut(String reservationId) async {
+    final params = {'reservationId': reservationId};
+    return _call('confirmCheckOut', params);
+  }
 }

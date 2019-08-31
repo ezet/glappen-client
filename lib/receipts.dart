@@ -187,12 +187,7 @@ class ReceiptItem extends StatelessWidget {
                     children: <Widget>[
                       Text(item.state.toString()),
                       _buildRaisedButton(context, item),
-                      RaisedButton(
-                        onPressed: () async {
-                          service.confirmCheckIn(item.docId);
-                        },
-                        child: Text('confirm'),
-                      )
+                      buildAdminActionButton(service)
                     ],
                   ),
                 ),
@@ -202,6 +197,20 @@ class ReceiptItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildAdminActionButton(GlappenService service) {
+    if (item.state != ReservationState.PAYMENT_RESERVED &&
+        item.state != ReservationState.CHECKING_OUT) return Container();
+    return RaisedButton(
+      onPressed: () async {
+        if (item.state == ReservationState.PAYMENT_RESERVED)
+          service.confirmCheckIn(item.docId);
+        else
+          service.confirmCheckOut(item.docId);
+      },
+      child: Text('confirm'),
     );
   }
 
