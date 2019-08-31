@@ -222,6 +222,17 @@ class ReceiptItem extends StatelessWidget {
         child: Text('CANCEL'),
         shape: shape2,
       );
+    } else if (item.state == ReservationState.CHECKING_OUT) {
+      return RaisedButton(
+        onPressed: () async {
+          final result = await service.cancelCheckOut(item.docId);
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('Your request to check out has been cancelled.'),
+          ));
+        },
+        child: Text('CANCEL'),
+        shape: shape2,
+      );
     } else {
       return RaisedButton(
         onPressed: () async {

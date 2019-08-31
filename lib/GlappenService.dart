@@ -39,6 +39,11 @@ class GlappenService {
     return _call('cancelCheckIn', {'reservationId': reservationId});
   }
 
+  /// Cancel an on-going check-out.
+  Future<void> cancelCheckOut(String reservationId) async {
+    return client.cancelCheckOut(reservationId);
+  }
+
   /// Confirm a payment
   Future<Map> confirmPayment(String reservationId, {String paymentMethodId}) async {
     final params = {'reservationId': reservationId};
