@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:garderobelappen/sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -28,21 +30,34 @@ class Garderobelappen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var data = EasyLocalizationProvider.of(context).data;
     var materialApp = MaterialApp(
       title: _title,
       theme: ThemeData(
           // accentColor: Colors.lightBlueAccent,
           primarySwatch: Colors.orange),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        //app-specific localization
+        EasylocaLizationDelegate(locale: data.locale, path: 'assets/l8n'),
+      ],
+      supportedLocales: [Locale('en', 'US'), Locale('no', 'NO')],
+      locale: data.savedLocale,
       home: Authenticator(),
 //      initialRoute: Authenticator.routeName,
     );
 
+    final localizationProvider =
+        EasyLocalizationProvider(data: data, child: materialApp);
+
     return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+      StreamProvider<FirebaseUser>.value(
+          value: FirebaseAuth.instance.onAuthStateChanged),
       StreamProvider<StripeData>.value(
         value: locator.get<GlappenService>().getCurrentUserStripeId(),
       ),
-    ], child: materialApp);
+    ], child: localizationProvider);
   }
 }
 
@@ -85,7 +100,8 @@ class _AuthenticatorState extends State<Authenticator> {
 //          photoUrl: _currentUser.photoUrl);
 //      api.updateUser(user);
 
-      return ChangeNotifierProvider.value(value: ScanButtonState(), child: Dashboard());
+      return ChangeNotifierProvider.value(
+          value: ScanButtonState(), child: Dashboard());
     }
   }
 
