@@ -29,9 +29,13 @@ class GlappenService {
   }
 
   /// Request check-in
-  Future<Map> requestCheckIn(String paymentMethodId) async {
-    return _call('requestCheckIn',
-        {'paymentMethodId': paymentMethodId, 'returnUrl': 'stripesdk://3ds.stripesdk.io'});
+  Future<Map> requestCheckIn(
+      String qrCode, String paymentMethodId, int count) async {
+    return _call('requestCheckIn', {
+      'code': qrCode,
+      'tickets': count,
+      'paymentMethodId': paymentMethodId,
+    });
   }
 
   /// Cancel an on-going check-in.
@@ -40,7 +44,8 @@ class GlappenService {
   }
 
   /// Confirm a payment
-  Future<Map> confirmPayment(String reservationId, {String paymentMethodId}) async {
+  Future<Map> confirmPayment(String reservationId,
+      {String paymentMethodId}) async {
     final params = {'reservationId': reservationId};
     if (paymentMethodId != null) params['paymentMethodId'] = paymentMethodId;
     return _call('confirmPayment', params);
@@ -54,7 +59,8 @@ class GlappenService {
 
   /// Get a stripe ephemeral key
   Future<String> getEphemeralKey(String apiVersion) async {
-    final result = await _call('getEphemeralKey', {'stripeversion': apiVersion});
+    final result =
+        await _call('getEphemeralKey', {'stripeversion': apiVersion});
     final key = result['key'];
     final jsonKey = json.encode(key);
     return jsonKey;

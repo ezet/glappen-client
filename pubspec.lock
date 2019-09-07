@@ -262,11 +262,9 @@ packages:
   stripe_sdk:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "88eb4d42f33165636e98e493f84f476f3b553213"
-      url: "git://github.com/ezet/stripe_sdk.git"
-    source: git
+      path: "..\\stripe_api"
+      relative: true
+    source: path
     version: "0.0.1"
   term_glyph:
     dependency: transitive

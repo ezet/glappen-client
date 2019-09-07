@@ -14,9 +14,9 @@ import 'locator.dart';
 
 void main() {
   getLocator();
-  runApp(
-    Garderobelappen(),
-  );
+  runApp(EasyLocalization(
+    child: Garderobelappen(),
+  ));
 }
 
 class StripeData {
@@ -31,18 +31,29 @@ class Garderobelappen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data = EasyLocalizationProvider.of(context).data;
+    // data.changeLocale(Locale("nb", "NO"));
     var materialApp = MaterialApp(
       title: _title,
       theme: ThemeData(
           // accentColor: Colors.lightBlueAccent,
-          primarySwatch: Colors.orange),
+          fontFamily: 'Nunito',
+          // primarySwatch: Colors.pink,
+          buttonColor: Colors.black,
+          accentColor: Colors.black,
+          backgroundColor: Colors.black,
+          // primaryColor: Color.fromRGBO(246, 79, 127, 1),
+          buttonTheme: ButtonThemeData(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16))))),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         //app-specific localization
         EasylocaLizationDelegate(locale: data.locale, path: 'assets/l8n'),
       ],
-      supportedLocales: [Locale('en', 'US'), Locale('no', 'NO')],
+      supportedLocales: [
+        Locale('nb', 'NO'),
+      ],
       locale: data.savedLocale,
       home: Authenticator(),
 //      initialRoute: Authenticator.routeName,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class Receipts extends StatelessWidget {
     final api = locator.get<GarderobelClient>();
     final user = Provider.of<FirebaseUser>(context);
     final reservations = api.findReservationsForUser(user.uid);
-    return StreamProvider.value(value: reservations, child: ReservationHandler());
+    return StreamProvider.value(
+        value: reservations, child: ReservationHandler());
   }
 }
 
@@ -26,7 +28,22 @@ class NoReceipts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(child: Text('You have no active tickets!')),
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              AppLocalizations.of(context).tr('dashboard.emptyState.title'),
+            ),
+            Text(
+              AppLocalizations.of(context).tr('dashboard.emptyState.body'),
+              textAlign: TextAlign.center,
+            )
+          ],
+        )),
+      ),
     );
   }
 }
@@ -57,7 +74,8 @@ class ReservationPaymentAuthRequired extends StatelessWidget {
                 final response = await service.cancelCheckIn(item.docId);
                 if (response != null) {
                   Scaffold.of(context).showSnackBar((SnackBar(
-                    content: Text("Your reservation was successfully cancelled!"),
+                    content:
+                        Text("Your reservation was successfully cancelled!"),
                   )));
                 }
               },
@@ -72,7 +90,8 @@ class ReservationPaymentAuthRequired extends StatelessWidget {
 class ReservationPaymentMethodRequired extends StatelessWidget {
   final Reservation item;
 
-  const ReservationPaymentMethodRequired({Key key, this.item}) : super(key: key);
+  const ReservationPaymentMethodRequired({Key key, this.item})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +107,8 @@ class ReservationHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
-    final isAwaitingPayment =
-        list.length > 0 && list[0].state.index < ReservationState.PAYMENT_RESERVED.index;
+    final isAwaitingPayment = list.length > 0 &&
+        list[0].state.index < ReservationState.PAYMENT_RESERVED.index;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ScanButtonState>(context).setState(!isAwaitingPayment);
     });
@@ -102,6 +121,8 @@ class ReservationHandler extends StatelessWidget {
         return ReservationPaymentAuthRequired(item: item);
       } else if (item.state == ReservationState.PAYMENT_METHOD_REQUIRED) {
         return ReservationPaymentMethodRequired(item: item);
+      } else {
+        return Container();
       }
     } else {
       return ReceiptsList();
@@ -132,6 +153,18 @@ class ReceiptsList extends StatelessWidget {
   }
 }
 
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}
+
 class ReceiptItem extends StatelessWidget {
   final Reservation item;
 
@@ -153,26 +186,30 @@ class ReceiptItem extends StatelessWidget {
                 flex: 2,
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.orangeAccent,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
+                      color: HexColor(item.color),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(5))),
                   child: Column(
                     children: <Widget>[
                       Expanded(
                         child: Center(
                           child: Text(
                             item.venueName,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       Expanded(
                         child: Center(
                           child: Text(item.hangerName,
-                              style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900)),
+                              style: TextStyle(
+                                  fontSize: 60, fontWeight: FontWeight.w900)),
                         ),
                       ),
                       Expanded(
-                        child: Center(child: Text(item.wardrobeName ?? "Wardrobe")),
+                        child: Center(
+                            child: Text(item.wardrobeName ?? "Wardrobe")),
                         flex: 1,
                       )
                     ],
@@ -207,7 +244,8 @@ class ReceiptItem extends StatelessWidget {
 
   RaisedButton _buildRaisedButton(BuildContext context, Reservation item) {
     final service = locator.get<GlappenService>();
-    var shape2 = RoundedRectangleBorder(borderRadius: BorderRadius.circular(30));
+    var shape2 =
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(30));
     if (item.state == ReservationState.PAYMENT_RESERVED) {
       return RaisedButton(
         onPressed: () async {

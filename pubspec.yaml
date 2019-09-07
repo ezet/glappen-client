@@ -27,9 +27,9 @@ dependencies:
     path: ./../garderobel_api
 
   stripe_sdk:
-#    path: ./../stripe_api
-    git:
-      url: git://github.com/ezet/stripe_sdk.git
+   path: ./../stripe_api
+    # git:
+      # url: git://github.com/ezet/stripe_sdk.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,6 +43,7 @@ dependencies:
   firebase_auth: ^0.11.1+12
   cloud_functions: ^0.4.1
 
+  # uni_links: ^0.2.0
 
   #  qr_code_scanner: ^0.0.10
   #  barcode_scan: ^1.0.0
@@ -83,7 +84,7 @@ flutter:
     - icons/mastercard.png
     - icons/visa.png
     - assets/l8n/en-US.json
-    - assets/l8n/nn-NO.json
+    - assets/l8n/nb-NO.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -111,3 +112,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+    - family: Nunito
+      fonts:
+      - asset: fonts/Nunito-Regular.ttf      
+      - asset: fonts/Nunito-Bold.ttf      
+        weight: 700

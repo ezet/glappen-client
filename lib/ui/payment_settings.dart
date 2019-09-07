@@ -22,7 +22,9 @@ class PaymentSettings extends StatelessWidget {
               icon: Icon(Icons.add),
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddPaymentMethod()));
               },
             )
           ],
@@ -36,9 +38,17 @@ class PaymentSettings extends StatelessWidget {
               return {};
             },
           ),
+          // DefaultPaymentMethodProvider(),
           ChangeNotifierProvider<DefaultPaymentMethod>.value(value: DefaultPaymentMethod())
         ], child: PaymentMethodsList()));
   }
+}
+
+class DefaultPaymentMethodProvider extends ChangeNotifierProvider<DefaultPaymentMethod> {
+  DefaultPaymentMethodProvider({
+    Key key,
+    Widget child,
+  }) : super.value(key: key, value: DefaultPaymentMethod(), child: child);
 }
 
 class DefaultPaymentMethod extends ChangeNotifier {
@@ -56,7 +66,9 @@ class DefaultPaymentMethod extends ChangeNotifier {
 
   set(String newPaymentMethod) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(defaultPaymentMethod, newPaymentMethod).whenComplete(() => prefs.commit());
+    prefs
+        .setString(defaultPaymentMethod, newPaymentMethod)
+        .whenComplete(() => prefs.commit());
     paymentMethodId = newPaymentMethod;
     notifyListeners();
   }
@@ -81,7 +93,8 @@ class PaymentMethodsList extends StatelessWidget {
             final card = data['card'];
             return ListTile(
               onLongPress: () async {
-                final result = await stripeSession.detachPaymentMethod(data['id']);
+                final result =
+                    await stripeSession.detachPaymentMethod(data['id']);
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('Payment method successfully deleted.'),
                 ));
