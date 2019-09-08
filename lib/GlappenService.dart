@@ -24,6 +24,7 @@ class GlappenService {
       return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);
+      log(e.toString());
       return null;
     }
   }

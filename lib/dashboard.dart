@@ -252,11 +252,11 @@ class _DashboardState extends State<Dashboard> {
     } else {
       final reservationData = await api.requestCheckIn(
           qrCode, result.paymentMethod, result.numTickets);
-      await _handlePaymentIntent(reservationData);
+      await _handlePaymentIntent(reservationData, reservationData['id']);
     }
   }
 
-  _handlePaymentIntent(Map<String, dynamic> paymentIntent) async {
+  _handlePaymentIntent(Map paymentIntent, String reservationId) async {
     final api = locator.get<GlappenService>();
     if (paymentIntent == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -265,15 +265,15 @@ class _DashboardState extends State<Dashboard> {
     } else if (paymentIntent['status'] == 'requires_action') {
       // todo: show waiting screen
       final intent = await launch3ds(paymentIntent['nextAction']);
-      _handlePaymentIntent(intent);
+      _handlePaymentIntent(intent, reservationId);
     } else if (paymentIntent['status'] == 'requires_confirmation') {
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) => Center(child: CircularProgressIndicator()));
-      final confirmation = await api.confirmPayment(paymentIntent['id']);
+      final confirmation = await api.confirmPayment(reservationId);
       Navigator.of(context).pop();
-      await _handlePaymentIntent(confirmation);
+      await _handlePaymentIntent(confirmation, reservationId);
     } else if (paymentIntent['status'] == 'requires_payment_method') {
       // todo
     } else if (paymentIntent['status'] == 'requires_capture') {

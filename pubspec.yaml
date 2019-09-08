@@ -24,12 +24,15 @@ dependencies:
 
 
   garderobel_api:
-    path: ./../garderobel_api
+    # path: ./../garderobel_api
+    git:
+      # url: git://bitbucket.org:garderobelapp/garderobel_api.git
+      url: https://ezet@bitbucket.org/garderobelapp/garderobel_api.git
 
   stripe_sdk:
-   path: ./../stripe_api
-    # git:
-      # url: git://github.com/ezet/stripe_sdk.git
+  #  path: ./../stripe_api
+    git:
+      url: git://github.com/ezet/stripe_sdk.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,7 +46,7 @@ dependencies:
   firebase_auth: ^0.11.1+12
   cloud_functions: ^0.4.1
 
-  # uni_links: ^0.2.0
+  uni_links: ^0.2.0
 
   #  qr_code_scanner: ^0.0.10
   #  barcode_scan: ^1.0.0

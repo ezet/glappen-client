@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:garderobelappen/sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'GlappenService.dart';
 import 'dashboard.dart';

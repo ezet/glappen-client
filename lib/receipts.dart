@@ -225,9 +225,7 @@ class ReceiptItem extends StatelessWidget {
                       Text(item.state.toString()),
                       _buildRaisedButton(context, item),
                       RaisedButton(
-                        onPressed: () async {
-                          service.confirmCheckIn(item.docId);
-                        },
+                        onPressed: () async => buildConfirmationButton(service),
                         child: Text('confirm'),
                       )
                     ],
@@ -240,6 +238,16 @@ class ReceiptItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void buildConfirmationButton(GlappenService service) {
+    if (item.state == ReservationState.PAYMENT_RESERVED)
+      service.confirmCheckIn(item.docId);
+    else if (item.state == ReservationState.CHECKED_IN)
+      // service.confirmCheckOut();
+      null;
+    else
+      null;
   }
 
   RaisedButton _buildRaisedButton(BuildContext context, Reservation item) {
