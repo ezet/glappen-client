@@ -27,7 +27,8 @@ dependencies:
     # path: ./../garderobel_api
     git:
       # url: git://bitbucket.org:garderobelapp/garderobel_api.git
-      url: https://ezet@bitbucket.org/garderobelapp/garderobel_api.git
+      # url: https://ezet@bitbucket.org/garderobelapp/garderobel_api.git
+      url: git@bitbucket.org:garderobelapp/garderobel_api.git
 
   stripe_sdk:
   #  path: ./../stripe_api
