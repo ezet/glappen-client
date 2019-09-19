@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobelappen/ui/add_payment_method.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_sdk/stripe.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
 
 import '../locator.dart';
 

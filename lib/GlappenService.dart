@@ -31,11 +31,12 @@ class GlappenService {
 
   /// Request check-in
   Future<Map> requestCheckIn(
-      String qrCode, String paymentMethodId, int count) async {
+      String qrCode, String paymentMethodId, int count, String returnUrl) async {
     return _call('requestCheckIn', {
       'code': qrCode,
       'tickets': count,
-      'paymentMethodId': paymentMethodId,
+      'payment_method_id': paymentMethodId,
+      'return_url': returnUrl
     });
   }
 
@@ -65,11 +66,6 @@ class GlappenService {
     final key = result['key'];
     final jsonKey = json.encode(key);
     return jsonKey;
-  }
-
-  /// Create and attach a payment method
-  Future<Map> createPaymentMethod(String paymentMethodId) async {
-    return _call('addPaymentMethod', {'paymentMethodId': paymentMethodId});
   }
 
   Stream<StripeData> getCurrentUserStripeId() {

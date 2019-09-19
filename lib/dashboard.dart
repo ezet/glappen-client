@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import 'package:garderobelappen/ui/confirm_purchase_screen.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_sdk/stripe.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
 
 import 'GlappenService.dart';
 import 'locator.dart';
@@ -251,20 +250,24 @@ class _DashboardState extends State<Dashboard> {
       return;
     } else {
       final reservationData = await api.requestCheckIn(
-          qrCode, result.paymentMethod, result.numTickets);
+          qrCode, result.paymentMethod, result.numTickets, Stripe.getReturnUrl());
       await _handlePaymentIntent(reservationData, reservationData['id']);
     }
   }
 
   _handlePaymentIntent(Map paymentIntent, String reservationId) async {
     final api = locator.get<GlappenService>();
+    final session = locator.get<CustomerSession>();
     if (paymentIntent == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
               "There was an error processing your payment. Please try again.")));
     } else if (paymentIntent['status'] == 'requires_action') {
       // todo: show waiting screen
-      final intent = await launch3ds(paymentIntent['nextAction']);
+      // final intent = await launch3ds(paymentIntent['next_action']);
+      
+      final intent = await session.authenticatePayment(paymentIntent['client_secret']);
+      
       _handlePaymentIntent(intent, reservationId);
     } else if (paymentIntent['status'] == 'requires_confirmation') {
       showDialog(
@@ -286,5 +289,4 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Future<DocumentReference> _handleExistingReservations(String qrCode) {}
 }

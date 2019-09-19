@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_sdk/stripe.dart';
+import 'package:stripe_sdk/stripe_sdk.dart';
 
 import '../locator.dart';
 
