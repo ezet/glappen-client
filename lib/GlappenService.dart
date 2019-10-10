@@ -77,4 +77,9 @@ class GlappenService {
     final params = {'reservationId': reservationId};
     return _call('confirmCheckIn', params);
   }
+
+  Future<Map> createSetupIntent(String paymentMethod) {
+    final params = {'payment_method': paymentMethod};
+    return _call('createSetupIntent', params);
+  }
 }

@@ -9,13 +9,17 @@ GetIt locator = GetIt();
 
 GetIt getLocator() {
   locator.registerLazySingleton<Firestore>(() => Firestore.instance);
-  locator.registerLazySingleton<GarderobelClient>(() => GarderobelClient(locator.get()));
+  locator.registerLazySingleton<GarderobelClient>(
+      () => GarderobelClient(locator.get()));
   locator.registerLazySingleton(() => CloudFunctions(region: "europe-west2"));
-  locator.registerLazySingleton(() => GlappenService(locator.get(), locator.get()));
-  Stripe.init('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47');
-  locator.registerSingleton<Stripe>(Stripe.instance);
-  CustomerSession.initCustomerSession(
-      (version) => locator.get<GlappenService>().getEphemeralKey(version));
-  locator.registerSingleton<CustomerSession>(CustomerSession.instance);
+  locator.registerLazySingleton(
+      () => GlappenService(locator.get(), locator.get()));
+  locator.registerSingleton<StripeApi>(
+      StripeApi('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47'));
+  locator.registerSingleton<Stripe>(
+      Stripe('pk_test_gTROf276lYisD9kQGxPeHOtJ00dT2FrK47'));
+  locator.registerSingleton<CustomerSession>(CustomerSession(
+      (version) => locator.get<GlappenService>().getEphemeralKey(version)));
+
   return locator;
 }

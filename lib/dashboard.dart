@@ -257,7 +257,7 @@ class _DashboardState extends State<Dashboard> {
 
   _handlePaymentIntent(Map paymentIntent, String reservationId) async {
     final api = locator.get<GlappenService>();
-    final session = locator.get<CustomerSession>();
+    final stripe = locator.get<Stripe>();
     if (paymentIntent == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
@@ -266,7 +266,7 @@ class _DashboardState extends State<Dashboard> {
       // todo: show waiting screen
       // final intent = await launch3ds(paymentIntent['next_action']);
       
-      final intent = await session.authenticatePayment(paymentIntent['client_secret']);
+      final intent = await stripe.authenticatePayment(paymentIntent['client_secret']);
       
       _handlePaymentIntent(intent, reservationId);
     } else if (paymentIntent['status'] == 'requires_confirmation') {

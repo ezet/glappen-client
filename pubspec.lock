@@ -265,7 +265,7 @@ packages:
       path: "..\\stripe_api"
       relative: true
     source: path
-    version: "0.0.2"
+    version: "2.2.0"
   term_glyph:
     dependency: transitive
     description:
