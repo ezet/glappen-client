@@ -124,9 +124,11 @@ packages:
   garderobel_api:
     dependency: "direct main"
     description:
-      path: "..\\garderobel_api"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: f677226508884a88e7d91ae6aa1f8e76cdc28de4
+      url: "https://ezet@bitbucket.org/garderobelapp/garderobel_api.git"
+    source: git
     version: "0.0.1"
   get_it:
     dependency: "direct main"
@@ -262,10 +264,10 @@ packages:
   stripe_sdk:
     dependency: "direct main"
     description:
-      path: "..\\stripe_api"
-      relative: true
-    source: path
-    version: "2.2.0"
+      name: stripe_sdk
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.0"
   term_glyph:
     dependency: transitive
     description:

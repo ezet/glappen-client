@@ -30,11 +30,8 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  final cardMap = _cardData.toMap();
-                  cardMap.remove('object');
-                  final cardData = {'type': 'card', 'card': cardMap};
                   var paymentMethod =
-                      await stripeApi.createPaymentMethod(cardData);
+                      await stripeApi.createPaymentMethodFromCard(_cardData);
                   paymentMethod = await stripeSession
                       .attachPaymentMethod(paymentMethod['id']);
                   final createSetupIntentResposne = await glappenService
@@ -49,7 +46,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
         body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: CardForm(
-              _validationModel: _cardData,
+              card: _cardData,
               formKey: _formKey,
             )));
   }
