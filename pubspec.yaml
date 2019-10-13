@@ -22,18 +22,17 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-
   garderobel_api:
     # path: ./../garderobel_api
     git:
+      url: git@bitbucket.org:garderobelapp/garderobel_api.git # bitrise
       # url: git://bitbucket.org:garderobelapp/garderobel_api.git
-      url: https://ezet@bitbucket.org/garderobelapp/garderobel_api.git
-      # url: git@bitbucket.org:garderobelapp/garderobel_api.git
+      # url: https://ezet@bitbucket.org/garderobelapp/garderobel_api.git
 
   stripe_sdk: ^2.3.0
   #  path: ./../stripe_api
-    # git:
-      # url: git://github.com/ezet/stripe_sdk.git
+  # git:
+  # url: git://github.com/ezet/stripe_sdk.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -64,13 +63,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -89,7 +86,6 @@ flutter:
     - icons/visa.png
     - assets/l8n/en-US.json
     - assets/l8n/nb-NO.json
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -120,6 +116,6 @@ flutter:
   fonts:
     - family: Nunito
       fonts:
-      - asset: fonts/Nunito-Regular.ttf      
-      - asset: fonts/Nunito-Bold.ttf      
-        weight: 700
+        - asset: fonts/Nunito-Regular.ttf
+        - asset: fonts/Nunito-Bold.ttf
+          weight: 700
