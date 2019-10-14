@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,22 @@ class NoReceipts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(child: Text('You have no active tickets!')),
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              AppLocalizations.of(context).tr('dashboard.emptyState.title'),
+            ),
+            Text(
+              AppLocalizations.of(context).tr('dashboard.emptyState.body'),
+              textAlign: TextAlign.center,
+            )
+          ],
+        )),
+      ),
     );
   }
 }
@@ -102,6 +118,8 @@ class ReservationHandler extends StatelessWidget {
         return ReservationPaymentAuthRequired(item: item);
       } else if (item.state == ReservationState.PAYMENT_METHOD_REQUIRED) {
         return ReservationPaymentMethodRequired(item: item);
+      } else {
+        return Container();
       }
     } else {
       return ReceiptsList();
@@ -132,6 +150,18 @@ class ReceiptsList extends StatelessWidget {
   }
 }
 
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}
+
 class ReceiptItem extends StatelessWidget {
   final Reservation item;
 
@@ -153,7 +183,7 @@ class ReceiptItem extends StatelessWidget {
                 flex: 2,
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.orangeAccent,
+                      color: HexColor(item.color),
                       borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
                   child: Column(
                     children: <Widget>[
@@ -212,6 +242,16 @@ class ReceiptItem extends StatelessWidget {
       },
       child: Text('confirm'),
     );
+  }
+
+  void buildConfirmationButton(GlappenService service) {
+    if (item.state == ReservationState.PAYMENT_RESERVED)
+      service.confirmCheckIn(item.docId);
+    else if (item.state == ReservationState.CHECKED_IN)
+      // service.confirmCheckOut();
+      null;
+    else
+      null;
   }
 
   RaisedButton _buildRaisedButton(BuildContext context, Reservation item) {

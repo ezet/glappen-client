@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:garderobelappen/sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -12,9 +14,9 @@ import 'locator.dart';
 
 void main() {
   getLocator();
-  runApp(
-    Garderobelappen(),
-  );
+  runApp(EasyLocalization(
+    child: Garderobelappen(),
+  ));
 }
 
 class StripeData {
@@ -28,21 +30,45 @@ class Garderobelappen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var data = EasyLocalizationProvider.of(context).data;
+    // data.changeLocale(Locale("nb", "NO"));
     var materialApp = MaterialApp(
       title: _title,
       theme: ThemeData(
           // accentColor: Colors.lightBlueAccent,
-          primarySwatch: Colors.orange),
+          fontFamily: 'Nunito',
+          // primarySwatch: Colors.pink,
+          buttonColor: Colors.black,
+          accentColor: Colors.black,
+          backgroundColor: Colors.black,
+          // primaryColor: Color.fromRGBO(246, 79, 127, 1),
+          buttonTheme: ButtonThemeData(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16))))),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        //app-specific localization
+        EasylocaLizationDelegate(locale: data.locale, path: 'assets/l8n'),
+      ],
+      supportedLocales: [
+        Locale('nb', 'NO'),
+      ],
+      locale: data.savedLocale,
       home: Authenticator(),
 //      initialRoute: Authenticator.routeName,
     );
 
+    final localizationProvider =
+        EasyLocalizationProvider(data: data, child: materialApp);
+
     return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+      StreamProvider<FirebaseUser>.value(
+          value: FirebaseAuth.instance.onAuthStateChanged),
       StreamProvider<StripeData>.value(
         value: locator.get<GlappenService>().getCurrentUserStripeId(),
       ),
-    ], child: materialApp);
+    ], child: localizationProvider);
   }
 }
 
@@ -85,7 +111,8 @@ class _AuthenticatorState extends State<Authenticator> {
 //          photoUrl: _currentUser.photoUrl);
 //      api.updateUser(user);
 
-      return ChangeNotifierProvider.value(value: ScanButtonState(), child: Dashboard());
+      return ChangeNotifierProvider.value(
+          value: ScanButtonState(), child: Dashboard());
     }
   }
 

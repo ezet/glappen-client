@@ -24,14 +24,20 @@ class GlappenService {
       return result.data;
     } on CloudFunctionsException catch (e) {
       log(e.message);
+      log(e.toString());
       return null;
     }
   }
 
   /// Request check-in
-  Future<Map> requestCheckIn(String paymentMethodId) async {
-    return _call('requestCheckIn',
-        {'paymentMethodId': paymentMethodId, 'returnUrl': 'stripesdk://3ds.stripesdk.io'});
+  Future<Map> requestCheckIn(
+      String qrCode, String paymentMethodId, int count, String returnUrl) async {
+    return _call('requestCheckIn', {
+      'code': qrCode,
+      'tickets': count,
+      'payment_method_id': paymentMethodId,
+      'return_url': returnUrl
+    });
   }
 
   /// Cancel an on-going check-in.
@@ -65,11 +71,6 @@ class GlappenService {
     return jsonKey;
   }
 
-  /// Create and attach a payment method
-  Future<Map> createPaymentMethod(String paymentMethodId) async {
-    return _call('addPaymentMethod', {'paymentMethodId': paymentMethodId});
-  }
-
   Stream<StripeData> getCurrentUserStripeId() {
     return client.getCurrentUser().map((item) => StripeData(item['stripeId']));
   }
@@ -84,5 +85,10 @@ class GlappenService {
   Future<Map> confirmCheckOut(String reservationId) async {
     final params = {'reservationId': reservationId};
     return _call('confirmCheckOut', params);
+  }
+
+  Future<Map> createSetupIntent(String paymentMethod) {
+    final params = {'payment_method': paymentMethod};
+    return _call('createSetupIntent', params);
   }
 }

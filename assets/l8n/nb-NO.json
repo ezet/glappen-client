@@ -1,0 +1,12 @@
+{
+    "dashboard": {
+        "emptyState": {
+            "title": "Du har ingen garderobelapper.",
+            "body": "Når du kommer frem i køen kan du trykke på + og lese QR-koden for å kjøpe en plass."
+        }
+    },
+    "confirmPurchase": {
+        "title": "Kjøp garderobeplass",
+        "body": "Når du kommer frem i køen, trykk “neste” og pek kameraet på QR-koden på disken for å betale."
+    }
+}
