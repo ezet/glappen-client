@@ -65,16 +65,15 @@ class _DashboardState extends State<Dashboard> {
 
   _tryScan() async {
     final prefs = await SharedPreferences.getInstance();
-    final paymentMethodId =
-        prefs.get(DefaultPaymentMethod.defaultPaymentMethod);
+    final paymentMethodId = prefs.getString(DefaultPaymentMethod.defaultPaymentMethod);
     if (paymentMethodId == null) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please set a payment method first."),
       ));
       return;
     }
-    final result = await Navigator.push<String>(
-        context, MaterialPageRoute(builder: (context) => Scanner()));
+    final result =
+        await Navigator.push<String>(context, MaterialPageRoute(builder: (context) => Scanner()));
     await _handleNewReservation(result);
   }
 
@@ -89,18 +88,14 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(user.photoUrl),
                         radius: 16,
                       )),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(user.displayName),
-                      Text(user.email)
-                    ],
+                    children: <Widget>[Text(user.displayName), Text(user.email)],
                   )
                 ],
               ),
@@ -113,9 +108,7 @@ class _DashboardState extends State<Dashboard> {
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
                         onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PaymentSettings())),
+                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),
@@ -225,8 +218,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<ConfirmPurchaseResult> _showPurchaseOptionScreen(String qrCode) {
-    return Navigator.of(context).push<ConfirmPurchaseResult>(MaterialPageRoute(
-        builder: (BuildContext context) => ConfirmPurchase()));
+    return Navigator.of(context).push<ConfirmPurchaseResult>(
+        MaterialPageRoute(builder: (BuildContext context) => ConfirmPurchase()));
   }
 
   _handleNewReservation(String qrCode) async {
@@ -259,15 +252,14 @@ class _DashboardState extends State<Dashboard> {
     final api = locator.get<GlappenService>();
     final stripe = locator.get<Stripe>();
     if (paymentIntent == null) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-              "There was an error processing your payment. Please try again.")));
+      scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text("There was an error processing your payment. Please try again.")));
     } else if (paymentIntent['status'] == 'requires_action') {
       // todo: show waiting screen
       // final intent = await launch3ds(paymentIntent['next_action']);
-      
+
       final intent = await stripe.authenticatePayment(paymentIntent['client_secret']);
-      
+
       _handlePaymentIntent(intent, reservationId);
     } else if (paymentIntent['status'] == 'requires_confirmation') {
       showDialog(
@@ -280,13 +272,10 @@ class _DashboardState extends State<Dashboard> {
     } else if (paymentIntent['status'] == 'requires_payment_method') {
       // todo
     } else if (paymentIntent['status'] == 'requires_capture') {
-      scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text("Reservation successful")));
+      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-              "There was an error processing your payment. Please try again.")));
+      scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text("There was an error processing your payment. Please try again.")));
     }
   }
-
 }
