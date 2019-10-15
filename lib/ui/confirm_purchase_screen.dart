@@ -1,10 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobelappen/ui/payment_settings.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
-
-import '../locator.dart';
 
 class ConfirmPurchaseResult {
   final String paymentMethod;
@@ -98,8 +96,7 @@ class _ConfirmPurchaseState extends State<ConfirmPurchase> {
                 RaisedButton(
                   child: Text("Neste"),
                   onPressed: () {
-                    Navigator.of(context)
-                        .pop(ConfirmPurchaseResult(paymentMethod, count));
+                    Navigator.of(context).pop(ConfirmPurchaseResult(paymentMethod, count));
                   },
                 )
               ],
@@ -122,70 +119,38 @@ class PaymentMethod {
   PaymentMethod(this.id, this.last4, this.brand);
 }
 
-class PaymentMethodSelector extends StatefulWidget {
-  PaymentMethodSelector(
-      {Key key, @required this.selectedPaymentMethod, @required this.onChanged})
+class PaymentMethodSelector extends StatelessWidget {
+  PaymentMethodSelector({Key key, @required this.selectedPaymentMethod, @required this.onChanged})
       : super(key: key);
 
   final String selectedPaymentMethod;
   final void Function(String) onChanged;
 
   @override
-  _PaymentMethodSelectorState createState() => _PaymentMethodSelectorState();
-}
-
-class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
-  Future<List<PaymentMethod>> paymentMethodsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    final session = locator.get<CustomerSession>();
-    paymentMethodsFuture = session.listPaymentMethods().then((value) {
-      final List listData =
-          value['data'] ?? Future.value(List<PaymentMethod>());
-      if (listData.length == 0) {
-        return Future.value(List<PaymentMethod>());
-      }
-      final list = listData
-          .map((item) => PaymentMethod(
-              item['id'], item['card']['last4'], item['card']['brand']))
-          .toList();
-      return list;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: paymentMethodsFuture,
-      initialData: [PaymentMethod(null, "loading", "NOBRAND")],
-      builder: (context, AsyncSnapshot<List<PaymentMethod>> snapshot) {
-        final paymentMethods = snapshot.data;
-        final method = paymentMethods?.singleWhere(
-            (item) => item.id == widget.selectedPaymentMethod,
-            orElse: () => null);
-        return Container(
-          decoration: BoxDecoration(
-            border: Border.all(),
-          ),
-          child: DropdownButton(
-            underline: null,
-            isExpanded: true,
-            value: method?.id,
-            items: paymentMethods
-                ?.map((item) => DropdownMenuItem(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text("**** **** **** ${item.last4}"),
-                      ),
-                      value: item.id,
-                    ))
-                ?.toList(),
-            onChanged: (value) => widget.onChanged(value),
-          ),
-        );
-      },
+    final paymentMethods = Provider.of<PaymentMethods>(context);
+
+    final method = paymentMethods.paymentMethods
+        ?.singleWhere((item) => item.id == selectedPaymentMethod, orElse: () => null);
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(),
+      ),
+      child: DropdownButton(
+        underline: null,
+        isExpanded: true,
+        value: method?.id,
+        items: paymentMethods.paymentMethods
+            ?.map((item) => DropdownMenuItem(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("**** **** **** ${item.last4}"),
+                  ),
+                  value: item.id,
+                ))
+            ?.toList(),
+        onChanged: (value) => onChanged(value),
+      ),
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'GlappenService.dart';
 import 'dashboard.dart';
 import 'locator.dart';
+import 'ui/payment_settings.dart';
 
 void main() {
   getLocator();
@@ -43,8 +44,7 @@ class Garderobelappen extends StatelessWidget {
           backgroundColor: Colors.black,
           // primaryColor: Color.fromRGBO(246, 79, 127, 1),
           buttonTheme: ButtonThemeData(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16))))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))))),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -59,15 +59,16 @@ class Garderobelappen extends StatelessWidget {
 //      initialRoute: Authenticator.routeName,
     );
 
-    final localizationProvider =
-        EasyLocalizationProvider(data: data, child: materialApp);
+    final localizationProvider = EasyLocalizationProvider(data: data, child: materialApp);
 
     return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(
-          value: FirebaseAuth.instance.onAuthStateChanged),
+      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
       StreamProvider<StripeData>.value(
         value: locator.get<GlappenService>().getCurrentUserStripeId(),
       ),
+      ChangeNotifierProvider(
+        builder: (_) => PaymentMethods(),
+      )
     ], child: localizationProvider);
   }
 }
@@ -111,8 +112,7 @@ class _AuthenticatorState extends State<Authenticator> {
 //          photoUrl: _currentUser.photoUrl);
 //      api.updateUser(user);
 
-      return ChangeNotifierProvider.value(
-          value: ScanButtonState(), child: Dashboard());
+      return ChangeNotifierProvider.value(value: ScanButtonState(), child: Dashboard());
     }
   }
 
