@@ -22,7 +22,7 @@ class PaymentSettings extends StatelessWidget {
               onPressed: () async {
                 final added =
                     await Navigator.push(context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
-                if (added) await paymentMethods.refresh();
+                if (added == true) await paymentMethods.refresh();
               },
             )
           ],
@@ -89,12 +89,12 @@ class PaymentMethodsList extends StatelessWidget {
     }
     return RefreshIndicator(
       onRefresh: () => paymentMethods.refresh(),
-      child: buildListView(listData, stripeSession, defaultPaymentMethod, paymentMethods),
+      child: buildListView(listData, stripeSession, defaultPaymentMethod, paymentMethods, context),
     );
   }
 
   Widget buildListView(List<PaymentMethod> listData, CustomerSession stripeSession,
-      DefaultPaymentMethod defaultPaymentMethod, PaymentMethods paymentMethods) {
+      DefaultPaymentMethod defaultPaymentMethod, PaymentMethods paymentMethods, BuildContext rootContext) {
     if (listData.length == 0) {
       return ListView();
     } else {
@@ -104,11 +104,37 @@ class PaymentMethodsList extends StatelessWidget {
             final card = listData[index];
             return ListTile(
               onLongPress: () async {
-                final result = await stripeSession.detachPaymentMethod(card.id);
-                await paymentMethods.refresh();
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text('Payment method successfully deleted.'),
-                ));
+                showDialog(
+                    context: rootContext,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Delete card"),
+                        content: Text("Do you want to delete this card?"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("No"),
+                            onPressed: () => Navigator.pop(rootContext),
+                          ),
+                          FlatButton(
+                              child: Text("Yes"),
+                              onPressed: () async {
+                                Navigator.pop(rootContext);
+                                showDialog(
+                                    context: rootContext,
+                                    barrierDismissible: false,
+                                    builder: (context) => Center(child: CircularProgressIndicator()));
+                                final result = await stripeSession.detachPaymentMethod(card.id);
+                                Navigator.pop(rootContext);
+                                if (result != null) {
+                                  await paymentMethods.refresh();
+                                  Scaffold.of(rootContext).showSnackBar(SnackBar(
+                                    content: Text('Payment method successfully deleted.'),
+                                  ));
+                                }
+                              })
+                        ],
+                      );
+                    });
               },
               onTap: () => defaultPaymentMethod.set(card.id),
               subtitle: Text(card.last4),

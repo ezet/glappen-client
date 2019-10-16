@@ -72,8 +72,7 @@ class _DashboardState extends State<Dashboard> {
       ));
       return;
     }
-    final result =
-        await Navigator.push<String>(context, MaterialPageRoute(builder: (context) => Scanner()));
+    final result = await Navigator.push<String>(context, MaterialPageRoute(builder: (context) => Scanner()));
     await _handleNewReservation(result);
   }
 
@@ -107,8 +106,8 @@ class _DashboardState extends State<Dashboard> {
                       ListTile(
                         title: Text("Payment"),
                         subtitle: Text("Payment options and related settings"),
-                        onTap: () => Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => PaymentSettings())),
+                        onTap: () =>
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentSettings())),
                         leading: Icon(Icons.payment),
                       ),
                       Divider(),
@@ -141,8 +140,7 @@ class _DashboardState extends State<Dashboard> {
         context: context,
         isScrollControlled: true,
         elevation: 10,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: radius, topRight: radius)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: radius, topRight: radius)),
         builder: (ctx) => child);
   }
 
@@ -193,43 +191,38 @@ class _DashboardState extends State<Dashboard> {
         color: Theme.of(context).canvasColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                    height: 48,
-                    width: 48,
-                    child: Material(
-                        child: InkWell(
-                            onTap: () => _showSettingsSheet(),
-                            child: Icon(Icons.menu, color: Colors.black87)))),
-                SizedBox(
-                    height: 48,
-                    width: 48,
-                    child: Material(
-                        child: InkWell(
-                            onTap: () {
-                              _showFilterSheet();
-                            },
-                            child: Icon(Icons.search, color: Colors.black87))))
-              ]),
+          child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            SizedBox(
+                height: 48,
+                width: 48,
+                child: Material(
+                    child: InkWell(onTap: () => _showSettingsSheet(), child: Icon(Icons.menu, color: Colors.black87)))),
+            SizedBox(
+                height: 48,
+                width: 48,
+                child: Material(
+                    child: InkWell(
+                        onTap: () {
+                          _showFilterSheet();
+                        },
+                        child: Icon(Icons.search, color: Colors.black87))))
+          ]),
         ));
   }
 
   Future<ConfirmPurchaseResult> _showPurchaseOptionScreen(String qrCode) {
-    return Navigator.of(context).push<ConfirmPurchaseResult>(
-        MaterialPageRoute(builder: (BuildContext context) => ConfirmPurchase()));
+    return Navigator.of(context)
+        .push<ConfirmPurchaseResult>(MaterialPageRoute(builder: (BuildContext context) => ConfirmPurchase()));
   }
 
   _handleNewReservation(String qrCode) async {
     final api = locator.get<GlappenService>();
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()));
-
-    Navigator.of(context).pop();
+//    showDialog(
+//        context: context,
+//        barrierDismissible: false,
+//        builder: (context) => Center(child: CircularProgressIndicator()));
+//
+//    Navigator.of(context).pop();
 
     // if (reservationData == null) {
     // scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -242,8 +235,14 @@ class _DashboardState extends State<Dashboard> {
     if (result == null) {
       return;
     } else {
-      final reservationData = await api.requestCheckIn(
-          qrCode, result.paymentMethod, result.numTickets, Stripe.getReturnUrl());
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => Center(child: CircularProgressIndicator()));
+
+      final reservationData =
+          await api.requestCheckIn(qrCode, result.paymentMethod, result.numTickets, Stripe.getReturnUrl());
+      Navigator.pop(context);
       await _handlePaymentIntent(reservationData, reservationData['id']);
     }
   }
@@ -252,8 +251,8 @@ class _DashboardState extends State<Dashboard> {
     final api = locator.get<GlappenService>();
     final stripe = locator.get<Stripe>();
     if (paymentIntent == null) {
-      scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text("There was an error processing your payment. Please try again.")));
+      scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("There was an error processing your payment. Please try again.")));
     } else if (paymentIntent['status'] == 'requires_action') {
       // todo: show waiting screen
       // final intent = await launch3ds(paymentIntent['next_action']);
@@ -267,15 +266,15 @@ class _DashboardState extends State<Dashboard> {
           barrierDismissible: false,
           builder: (context) => Center(child: CircularProgressIndicator()));
       final confirmation = await api.confirmPayment(reservationId);
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       await _handlePaymentIntent(confirmation, reservationId);
     } else if (paymentIntent['status'] == 'requires_payment_method') {
       // todo
     } else if (paymentIntent['status'] == 'requires_capture') {
       scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Reservation successful")));
     } else {
-      scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text("There was an error processing your payment. Please try again.")));
+      scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("There was an error processing your payment. Please try again.")));
     }
   }
 }

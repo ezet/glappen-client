@@ -30,9 +30,14 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => Center(child: CircularProgressIndicator()));
                   var paymentMethod = await stripeApi.createPaymentMethodFromCard(_cardData);
                   paymentMethod = await stripeSession.attachPaymentMethod(paymentMethod['id']);
                   final createSetupIntentResponse = await glappenService.createSetupIntent(paymentMethod['id']);
+                  Navigator.pop(context);
 
                   if (createSetupIntentResponse['status'] == 'succeeded') {
                     Navigator.pop(context, true);
