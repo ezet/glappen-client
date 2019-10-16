@@ -120,8 +120,7 @@ class PaymentMethod {
 }
 
 class PaymentMethodSelector extends StatelessWidget {
-  PaymentMethodSelector({Key key, @required this.selectedPaymentMethod, @required this.onChanged})
-      : super(key: key);
+  PaymentMethodSelector({Key key, @required this.selectedPaymentMethod, @required this.onChanged}) : super(key: key);
 
   final String selectedPaymentMethod;
   final void Function(String) onChanged;
@@ -130,8 +129,8 @@ class PaymentMethodSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final paymentMethods = Provider.of<PaymentMethods>(context);
 
-    final method = paymentMethods.paymentMethods
-        ?.singleWhere((item) => item.id == selectedPaymentMethod, orElse: () => null);
+    final method =
+        paymentMethods.paymentMethods?.singleWhere((item) => item.id == selectedPaymentMethod, orElse: () => null);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(),

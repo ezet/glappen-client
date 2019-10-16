@@ -12,34 +12,22 @@ class PaymentSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final session = locator.get<CustomerSession>();
-    final paymentMethodsFuture = session.listPaymentMethods();
-
+    final paymentMethods = Provider.of<PaymentMethods>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text("Payment settings"),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
+              onPressed: () async {
+                final added =
+                    await Navigator.push(context, MaterialPageRoute(builder: (context) => AddPaymentMethod()));
+                if (added) await paymentMethods.refresh();
               },
             )
           ],
         ),
-        body: MultiProvider(providers: [
-          FutureProvider<Map<String, dynamic>>.value(
-            value: paymentMethodsFuture,
-            initialData: {},
-            catchError: (context, error) {
-              debugPrint(error.toString());
-              return {};
-            },
-          ),
-          // DefaultPaymentMethodProvider(),
-          ChangeNotifierProvider(builder: (_) => DefaultPaymentMethod())
-        ], child: PaymentMethodsList()));
+        body: ChangeNotifierProvider(builder: (_) => DefaultPaymentMethod(), child: PaymentMethodsList()));
   }
 }
 
@@ -51,16 +39,15 @@ class PaymentMethods extends ChangeNotifier {
     refresh();
   }
 
-  void refresh() {
+  Future<void> refresh() {
     final session = locator.get<CustomerSession>();
-    session.listPaymentMethods().then((value) {
+    return session.listPaymentMethods().then((value) {
       final List listData = value['data'] ?? List<PaymentMethod>();
       if (listData.length == 0) {
         paymentMethods = List();
       } else {
-        paymentMethods = listData
-            .map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand']))
-            .toList();
+        paymentMethods =
+            listData.map((item) => PaymentMethod(item['id'], item['card']['last4'], item['card']['brand'])).toList();
       }
       notifyListeners();
     });
@@ -97,18 +84,28 @@ class PaymentMethodsList extends StatelessWidget {
     final paymentMethods = Provider.of<PaymentMethods>(context);
     final listData = paymentMethods.paymentMethods;
     final defaultPaymentMethod = Provider.of<DefaultPaymentMethod>(context);
-    if (listData.length == 0) {
+    if (listData == null) {
       return Center(child: CircularProgressIndicator());
     }
     return RefreshIndicator(
-      onRefresh: () => Future.value(null),
-      child: ListView.builder(
+      onRefresh: () => paymentMethods.refresh(),
+      child: buildListView(listData, stripeSession, defaultPaymentMethod, paymentMethods),
+    );
+  }
+
+  Widget buildListView(List<PaymentMethod> listData, CustomerSession stripeSession,
+      DefaultPaymentMethod defaultPaymentMethod, PaymentMethods paymentMethods) {
+    if (listData.length == 0) {
+      return ListView();
+    } else {
+      return ListView.builder(
           itemCount: listData.length,
           itemBuilder: (BuildContext context, int index) {
             final card = listData[index];
             return ListTile(
               onLongPress: () async {
                 final result = await stripeSession.detachPaymentMethod(card.id);
+                await paymentMethods.refresh();
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('Payment method successfully deleted.'),
                 ));
@@ -117,10 +114,9 @@ class PaymentMethodsList extends StatelessWidget {
               subtitle: Text(card.last4),
               title: Text(card.brand),
               leading: Icon(Icons.credit_card),
-              trailing:
-                  card.id == defaultPaymentMethod.paymentMethodId ? Icon(Icons.check_circle) : null,
+              trailing: card.id == defaultPaymentMethod.paymentMethodId ? Icon(Icons.check_circle) : null,
             );
-          }),
-    );
+          });
+    }
   }
 }

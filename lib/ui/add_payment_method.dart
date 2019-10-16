@@ -30,14 +30,20 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  var paymentMethod =
-                      await stripeApi.createPaymentMethodFromCard(_cardData);
-                  paymentMethod = await stripeSession
-                      .attachPaymentMethod(paymentMethod['id']);
-                  final createSetupIntentResposne = await glappenService
-                      .createSetupIntent(paymentMethod['id']);
-                  var setupIntent = await stripe.confirmSetupIntent(
-                      createSetupIntentResposne['client_secret']);
+                  var paymentMethod = await stripeApi.createPaymentMethodFromCard(_cardData);
+                  paymentMethod = await stripeSession.attachPaymentMethod(paymentMethod['id']);
+                  final createSetupIntentResponse = await glappenService.createSetupIntent(paymentMethod['id']);
+
+                  if (createSetupIntentResponse['status'] == 'succeeded') {
+                    Navigator.pop(context, true);
+                    return;
+                  }
+                  var setupIntent = await stripe.confirmSetupIntent(createSetupIntentResponse['client_secret']);
+
+                  if (setupIntent['status'] == 'succeeded') {
+                    Navigator.pop(context, true);
+                    return;
+                  }
                 }
               },
             )
