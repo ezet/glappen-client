@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart';
 
 import '../GlappenService.dart';
 import '../locator.dart';
