@@ -39,12 +39,19 @@ class Garderobelappen extends StatelessWidget {
           // accentColor: Colors.lightBlueAccent,
           fontFamily: 'Nunito',
           // primarySwatch: Colors.pink,
+          scaffoldBackgroundColor: Color.fromRGBO(219, 212, 206, 1),
+          bottomAppBarColor: Color.fromRGBO(219, 212, 206, 1),
+          canvasColor: Color.fromRGBO(219, 212, 206, 1),
+//          canvasColor: Colors.white,
           buttonColor: Colors.black,
-          accentColor: Colors.black,
+          accentColor: Colors.white,
           backgroundColor: Colors.black,
+          highlightColor: Colors.white,
           // primaryColor: Color.fromRGBO(246, 79, 127, 1),
           buttonTheme: ButtonThemeData(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))))),
+              colorScheme: ColorScheme.dark(primary: Colors.black),
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 28),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))))),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -111,8 +118,10 @@ class _AuthenticatorState extends State<Authenticator> {
 //          phone: _currentUser.phoneNumber,
 //          photoUrl: _currentUser.photoUrl);
 //      api.updateUser(user);
-
-      return ChangeNotifierProvider.value(value: ScanButtonState(), child: Dashboard());
+      return MultiProvider(
+        providers: [ChangeNotifierProvider.value(value: ScanButtonState())],
+        child: Dashboard(),
+      );
     }
   }
 

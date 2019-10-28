@@ -15,7 +15,7 @@ import 'locator.dart';
 import 'scanner.dart';
 
 class ScanButtonState extends ChangeNotifier {
-  bool enabled = true;
+  bool enabled = false;
 
   setState(bool state) {
     final notify = enabled != state;
@@ -57,7 +57,7 @@ class _DashboardState extends State<Dashboard> {
             size: 24,
           ),
           elevation: 5,
-          backgroundColor: fabState.enabled ? Colors.pink : Colors.grey,
+          backgroundColor: fabState.enabled ? Colors.black : Colors.grey,
           foregroundColor: Colors.white,
           onPressed: fabState.enabled ? () => _tryScan() : null),
     );
@@ -188,7 +188,6 @@ class _DashboardState extends State<Dashboard> {
     return BottomAppBar(
         // shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         elevation: 0,
-        color: Theme.of(context).canvasColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

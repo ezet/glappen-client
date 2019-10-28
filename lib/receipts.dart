@@ -104,8 +104,7 @@ class ReservationHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
-    final isAwaitingPayment =
-        list.length > 0 && list[0].state.index < ReservationState.PAYMENT_RESERVED.index;
+    final isAwaitingPayment = list.length > 0 && list[0].state.index < ReservationState.PAYMENT_RESERVED.index;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ScanButtonState>(context).setState(!isAwaitingPayment);
     });
@@ -134,7 +133,7 @@ class ReceiptsList extends StatelessWidget {
     final list = Provider.of<Iterable<Reservation>>(context)?.toList() ?? [];
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(top: 10, bottom: 0),
+        margin: EdgeInsets.only(top: 60, bottom: 0),
         child: Swiper(
           itemBuilder: (context, i) => ReceiptItem(item: list[i]),
           itemCount: list?.length ?? 0,
@@ -174,65 +173,75 @@ class ReceiptItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 50, left: 5, right: 5, top: 40),
       child: Card(
-        // color: Colors.grey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+        color: HexColor('EFEAE6'),
         elevation: 12,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-                flex: 2,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: HexColor(item.color),
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(5))),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            item.venueName,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 48, bottom: 16, left: 8, right: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                  flex: 3,
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Center(
+                            child: Text(item.hangerName, style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900)),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(item.hangerName,
-                              style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900)),
+                        Expanded(
+                          child: Center(
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: HexColor(item.color),
+                                      borderRadius: BorderRadius.horizontal(
+                                          right: Radius.circular(16), left: Radius.circular(16))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                                    child: Text(item.wardrobeName ?? "Wardrobe",
+                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                  ))),
+                          flex: 1,
                         ),
-                      ),
-                      Expanded(
-                        child: Center(child: Text(item.wardrobeName ?? "Wardrobe")),
-                        flex: 1,
-                      )
-                    ],
-                  ),
-                )),
-            Expanded(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(item.state.toString()),
-                      _buildRaisedButton(context, item),
-                      buildAdminActionButton(service)
-                    ],
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              item.venueName,
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+//                        Text(item.state.toString()),
+                        _buildRaisedButton(context, item),
+//                        buildAdminActionButton(service)
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              flex: 3,
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildAdminActionButton(GlappenService service) {
-    if (item.state != ReservationState.PAYMENT_RESERVED &&
-        item.state != ReservationState.CHECKING_OUT) return Container();
+    if (item.state != ReservationState.PAYMENT_RESERVED && item.state != ReservationState.CHECKING_OUT)
+      return Container();
     return RaisedButton(
       onPressed: () async {
         if (item.state == ReservationState.PAYMENT_RESERVED)
@@ -256,20 +265,18 @@ class ReceiptItem extends StatelessWidget {
 
   RaisedButton _buildRaisedButton(BuildContext context, Reservation item) {
     final service = locator.get<GlappenService>();
-    var shape2 = RoundedRectangleBorder(borderRadius: BorderRadius.circular(30));
+    final textStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
     if (item.state == ReservationState.PAYMENT_RESERVED) {
       return RaisedButton(
         onPressed: () async {
           final result = await service.cancelCheckIn(item.docId);
           if (result != null) {
             Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  'Your reservation was successfully cancelled, and your payment has been refunded.'),
+              content: Text('Your reservation was successfully cancelled, and your payment has been refunded.'),
             ));
           }
         },
-        child: Text('CANCEL'),
-        shape: shape2,
+        child: Text('CANCEL', style: textStyle),
       );
     } else if (item.state == ReservationState.CHECKING_OUT) {
       return RaisedButton(
@@ -279,16 +286,20 @@ class ReceiptItem extends StatelessWidget {
             content: Text('Your request to check out has been cancelled.'),
           ));
         },
-        child: Text('CANCEL'),
-        shape: shape2,
+        child: Text(
+          'CANCEL',
+          style: textStyle,
+        ),
       );
     } else {
       return RaisedButton(
         onPressed: () async {
           final response = await service.requestCheckOut(item.docId);
         },
-        child: Text('CHECK-OUT'),
-        shape: shape2,
+        child: Text(
+          'CHECK-OUT',
+          style: textStyle,
+        ),
       );
     }
   }
